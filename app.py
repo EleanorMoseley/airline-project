@@ -74,5 +74,45 @@ def login():
         else:
             return render_template("login.html", error="Invalid username or password")
 
+
+
+
+#Define route for flightSearch
+@app.route('/flight_search')
+def flight_search():
+	return render_template('flight_search.html')
+
+#Authenticate the flightSearch
+@app.route('/search',methods=['GET','POST'])
+def search():
+	#grabs information form the forms
+	search_type = request.form['search_type']
+	if(search_type == 'city'):
+		source_city = request.form['search_type']
+		destination_city = request.form['destination']
+	else:
+		source_airport = request.form['source']
+		destination_airport = request.form['destination']
+	depart_date = request.form['departure_date']
+	return_date = request.form.get('return_date',None)
+	#cursor used to send queries
+	cursor = conn.cursor()
+	# excute queries
+	if (search_type == 'city'):
+		if(return_date):
+			query = "SELECT airline_name, flight_number, departure_date_time, arrival_date_time FROM Flight where departure_airport in(SELECT airport_code FROM Airport WHERE city=%s) and arrival_airport in(SELECT airport_code FROM Airport WHERE city = %s) and departure_date_time = %s"
+			cursor.excute(query,(source_city, destination_city, depart_date))
+			depart_flights = cursor.fetchall()
+			cursor.excute(query,(destination_city, source_city, return_date))
+			return_flights = cursor.fetchall()
+		else:
+			
+	cursor.close()
+	error =  None
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
