@@ -92,6 +92,7 @@ def staffLogin():
     if request == 'POST':
         username = request.form['username']
         password = request.form['password']
+        #password = hashlib.md5(request.form.get("password").encode()).hexdigest()
         cursor = connection.cursor()
         query = 'SELECT username,password FROM AirlineStaff WHERE username = %s and password = %s'
         cursor.execute(query, (username, password))
@@ -103,7 +104,7 @@ def staffLogin():
             return redirect(url_for('staffhome'))
         else:
             error = 'Invalid login or username'
-            return render_template('stafflogin.html', error=error)
+            return render_template('staffLogin.html', error=error)
     else:
         return render_template("stafflogin.html")
 
@@ -146,8 +147,8 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         # for testing purposes, the following line checks unhashed passwords
-        #password = request.form.get("password")   
-        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
+        password = request.form.get("password")   
+        #password = hashlib.md5(request.form.get("password").encode()).hexdigest()
 
 
         with connection.cursor() as cursor:
