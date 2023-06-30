@@ -82,6 +82,32 @@ def confirm_booking(flight_number):
     return redirect(url_for("home"))
 
 
+@app.route("/staffhome", methods=['GET', 'POST'])
+def staffhome():
+    return render_template('staffHome.html')
+
+
+@app.route('/staffLogin', methods=['GET', 'POST'])
+def staffLogin():
+    if request == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        cursor = conn.cursor()
+        query = 'SELECT username,password FROM AirlineStaff WHERE username = %s and password = %s'
+        cursor.execute(query, (username, password))
+        data = cursor.fetchone()
+        cursor.close()
+        error = None
+        if (data):
+            session['username'] = username
+            return redirect(url_for('staffhome'))
+        else:
+            error = 'Invalid login or username'
+            return render_template('stafflogin.html', error=error)
+    else:
+        return render_template("stafflogin.html")
+
+
 @app.route("/status", methods=["POST"])
 def status():
     airline = request.form.get("airline")
@@ -140,8 +166,6 @@ def login():
     else:
         # this assumes you have a login.html in your templates directory
         return render_template("login.html", error="Invalid username or password")
-
-
 
 @app.route('/logout')
 def logout():
