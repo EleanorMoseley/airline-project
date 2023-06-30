@@ -3,10 +3,13 @@
         <h1>Staff Login</h1>
     </head>
     <body>
-    <form action="/stafflogin" method="post">
+    <form action="/stafflogin" method="POST">
         Username:<input type="username" placeholder="username" name="username"><br>
         Password: <input type="password" placeholder="password" name="password"><br>
         <input type="submit" value="Login">
+        {% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	    {% endif %}
     </form>
     </body>
 </html>
