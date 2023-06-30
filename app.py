@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port=8889,
+                           
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -92,7 +92,7 @@ def staffLogin():
     if request == 'POST':
         username = request.form['username']
         password = request.form['password']
-        cursor = conn.cursor()
+        cursor = connection.cursor()
         query = 'SELECT username,password FROM AirlineStaff WHERE username = %s and password = %s'
         cursor.execute(query, (username, password))
         data = cursor.fetchone()
@@ -145,15 +145,18 @@ def register():
 def login():
     if request.method == "POST":
         email = request.form.get("email")
+        # for testing purposes, the following line checks unhashed passwords
+        #password = request.form.get("password")   
         password = hashlib.md5(request.form.get("password").encode()).hexdigest()
 
 
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM Customer WHERE email = %s AND password = %s", (email, password))
             user = cursor.fetchone()
+            print(user)
 
             if (user) is None:
-                cursor.execute("SELECT * FROM AirlineStaff WHERE email = %s AND password = %s", (email, password))
+                cursor.execute("SELECT * FROM AirlineStaff WHERE username = %s AND password = %s", (email, password))
                 user = cursor.fetchone()
             cursor.close()
             
@@ -165,7 +168,7 @@ def login():
                 return render_template("login.html", error="Invalid username or password")
     else:
         # this assumes you have a login.html in your templates directory
-        return render_template("login.html", error="Invalid username or password")
+        return render_template("login.html")
 
 @app.route('/logout')
 def logout():
