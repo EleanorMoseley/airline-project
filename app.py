@@ -87,8 +87,8 @@ def staffhome():
     return render_template('staffHome.html')
 
 
-@app.route('/staffLogin', methods=['GET', 'POST'])
-def staffLogin():
+@app.route('/stafflogin', methods=['GET', 'POST'])
+def stafflogin():
     if request == 'POST':
         username = request.form['username']
         password = request.form['password']
