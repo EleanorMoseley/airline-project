@@ -92,7 +92,7 @@ def staffLogin():
     if request == 'POST':
         username = request.form['username']
         password = request.form['password']
-        cursor = conn.cursor()
+        cursor = connection.cursor()
         query = 'SELECT username,password FROM AirlineStaff WHERE username = %s and password = %s'
         cursor.execute(query, (username, password))
         data = cursor.fetchone()
