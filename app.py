@@ -26,7 +26,7 @@ def search():
         cursor.execute("SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date_time >= %s", (source, destination, date))
         Flight = cursor.fetchall()
 
-    return render_template("search_results.html", Flight=Flight)
+    return render_template("search_results.html", flights=Flight)
 @app.route("/book/<flight_number>", methods=["GET"])
 def book(flight_number):
     with connection.cursor() as cursor:
