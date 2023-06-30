@@ -1,16 +1,19 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="post">
-       
-        Email:<input type="email" id="email" name="email"><br>
+<form action="/login" method="POST">
+	<input type="text" name = "email" placeholder="email" required/> </br>
+	<input type="password" name = "password" placeholder="password" required/></br>
+	<input type="submit" value = Login />
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
 
-        Password: <input type="password" id="password" name="password"><br>
-        <input type="submit" value="Login">
-    </form>
+<a href="/">Go back</a>
+
 </body>
+
+
 </html>

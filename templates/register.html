@@ -1,23 +1,16 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Registration</title>
 </head>
 <body>
-    <h1>Registration</h1>
-    <form action="/register" method="post">
-       
-       Name: <input type="text" id="name" name="name"><br>
-      
-       Email: <input type="email" id="email" name="email"><br>
-       
-       Password:  <input type="password" id="password" name="password"><br>
-        
-       Role: <select id="role" name="role">
-            <option value="customer">Customer</option>
-            <option value="staff">Airline Staff</option>
-        </select><br>
-        <input type="submit" value="Register">
-    </form>
+<form action="/register" method="POST">
+	<input type="text" name = "username" placeholder="username" required style="text-align: center;"/> </br>
+	<input type="password" name = "password" placeholder="password" required style="text-align: center;"/></br>
+	<input type="text" name = "email" placeholder="email" required style="text-align: center"/></br>
+	<input type="submit" value = Register style="text-align: center;"/>
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
+<a href="/">Go back</a>
 </body>
 </html>

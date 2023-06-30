@@ -6,15 +6,16 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
+                             port=8889,
                              user='root',
-                             password='',
+                             password='root',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    return render_template("index.html")
 
 @app.route("/search", methods=["POST"])
 def search():
@@ -33,6 +34,7 @@ def book(flight_number):
         cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
         flight = cursor.fetchone()
     return render_template("book.html", flight=flight)
+
 @app.route("/confirm_booking/<flight_number>", methods=["POST"])
 def confirm_booking(flight_number):
     # Redirect to login page if user is not logged in
@@ -98,18 +100,19 @@ def register():
         name = request.form.get("name")
         email = request.form.get("email")
         password = hashlib.md5(request.form.get("password").encode()).hexdigest()
-        role = request.form.get("role")
+        # role = request.form.get("role")
 
         with connection.cursor() as cursor:
-            if role == "customer":
-                cursor.execute("INSERT INTO Customers (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
-            else:
-                cursor.execute("INSERT INTO AirlineStaff (username, password) VALUES (%s, %s)", (email, password))
-
-        return redirect(url_for("home"))
+            cursor.execute("INSERT INTO Customer (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+            connection.commit()
+            cursor.close()
+        return redirect(url_for("index"))
+    if request.method == "GET":
+        return render_template('register.html')
     else:
         # this assumes you have a register.html in your templates directory
-        return render_template("register.html")
+        return render_template("index.html")
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -118,27 +121,33 @@ def login():
         email = request.form.get("email")
         password = hashlib.md5(request.form.get("password").encode()).hexdigest()
 
+
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM Customer WHERE email = %s AND password = %s", (email, password))
             user = cursor.fetchone()
 
-            if user is None:
-                cursor.execute("SELECT * FROM AirlineStaff WHERE username = %s AND password = %s", (email, password))
+            if (user) is None:
+                cursor.execute("SELECT * FROM AirlineStaff WHERE email = %s AND password = %s", (email, password))
                 user = cursor.fetchone()
-
-            if user is not None:
+            cursor.close()
+            
+            if (user): 
                 session["user"] = user
-                return redirect(url_for("home"))
+                return render_template('home.html')
+                
             else:
                 return render_template("login.html", error="Invalid username or password")
     else:
         # this assumes you have a login.html in your templates directory
-        return render_template("login.html")
+        return render_template("login.html", error="Invalid username or password")
 
-@app.route('/logout', methods=['GET'])
+
+
+@app.route('/logout')
 def logout():
-    session.pop("user", None)
-    return redirect(url_for("home"))
+    if (session.get('logged_in')==True):
+        session.pop('username')
+    return redirect('/')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+	app.run('127.0.0.1', 5000, debug = True)
