@@ -119,7 +119,7 @@ def login():
         password = hashlib.md5(request.form.get("password").encode()).hexdigest()
 
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM Customers WHERE email = %s AND password = %s", (email, password))
+            cursor.execute("SELECT * FROM Customer WHERE email = %s AND password = %s", (email, password))
             user = cursor.fetchone()
 
             if user is None:
