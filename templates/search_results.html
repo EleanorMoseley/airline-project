@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Search Results</h1>
+
+    <table>
+        <tr>
+            <th>Airline</th>
+            <th>Flight Number</th>
+            <th>Departure Time</th>
+            <th>Arrival Time</th>
+            <th>Action</th>
+        </tr>
+        {% for flight in flights %}
+            <tr>
+                <td>{{ flight.airline_name }}</td>
+                <td>{{ flight.flight_number }}</td>
+                <td>{{ flight.departure_time }}</td>
+                <td>{{ flight.arrival_time }}</td>
+                <td>
+                    <a href="{{ url_for('book', flight_number=flight.flight_number) }}">Book</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

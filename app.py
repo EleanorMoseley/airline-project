@@ -16,17 +16,69 @@ connection = pymysql.connect(host='localhost',
 def home():
     return render_template("home.html")
 
-@app.route("/searchs", methods=["POST"])
+@app.route("/search", methods=["POST"])
 def search():
     source = request.form.get("source")
     destination = request.form.get("destination")
     date = request.form.get("date")
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Flights WHERE departure_airport = %s AND arrival_airport = %s AND departure_time >= %s", (source, destination, date))
-        flights = cursor.fetchall()
+        cursor.execute("SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date_time >= %s", (source, destination, date))
+        Flight = cursor.fetchall()
 
-    return render_template("search_results.html", flights=flights)
+    return render_template("search_results.html", Flight=Flight)
+@app.route("/book/<flight_number>", methods=["GET"])
+def book(flight_number):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
+        flight = cursor.fetchone()
+    return render_template("book.html", flight=flight)
+@app.route("/confirm_booking/<flight_number>", methods=["POST"])
+def confirm_booking(flight_number):
+    # Redirect to login page if user is not logged in
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    # Get the payment information
+    card_number = request.form.get("card_number")
+    expiry_date = request.form.get("expiry_date")
+    cvv = request.form.get("cvv")
+
+    # Assume that the flight's base price is the sold price
+    # Get the logged-in user's email
+    user = session["user"]
+    email = user["email"]
+    
+    # Get the current date and time as the purchase date and time
+    from datetime import datetime
+    purchase_date_time = datetime.now()
+
+    with connection.cursor() as cursor:
+        # Get the airline_name and departure_date_time for the given flight_number
+        cursor.execute("SELECT airline_name, departure_date_time FROM Flight WHERE flight_number = %s", (flight_number,))
+        flight = cursor.fetchone()
+
+        if flight is None:
+            return render_template("error.html", message="No such flight.")
+
+        # Generate a unique ticket id
+        cursor.execute("SELECT MAX(id) AS max_id FROM Ticket")
+        max_id = cursor.fetchone()["max_id"]
+        ticket_id = max_id + 1 if max_id is not None else 1
+
+        # Add the new booking to the Ticket table
+        cursor.execute("INSERT INTO Ticket (id, customer_email, airline_name, flight_number, departure_date_time, sold_price, payment_info_card_type, payment_info_card_number, payment_info_name_on_card, payment_info_expiration_date, purchase_date_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       (ticket_id, email, flight["airline_name"], flight_number, flight["departure_date_time"], flight["base_price"], 'Credit', card_number, user["name"], expiry_date, purchase_date_time))
+
+        # Add the payment details to the Purchase table
+        cursor.execute("INSERT INTO Purchase (ticket_id, customer_email, sold_price, purchase_date, purchase_time, card_type, card_number, expiration_date, name_on_card) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                       (ticket_id, email, flight["base_price"], purchase_date_time.date(), purchase_date_time.time(), 'Credit', card_number, expiry_date, user["name"]))
+        
+        # Commit the transaction
+        connection.commit()
+
+    return redirect(url_for("home"))
+
 
 @app.route("/status", methods=["POST"])
 def status():
@@ -35,10 +87,11 @@ def status():
     date = request.form.get("date")
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Flights WHERE airline_name = %s AND flight_number = %s AND departure_time = %s", (airline, flight_number, date))
+        cursor.execute("SELECT * FROM Flight WHERE airline_name = %s AND flight_number = %s AND departure_time = %s", (airline, flight_number, date))
         flight = cursor.fetchone()
 
     return render_template("flight_status.html", flight=flight)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -82,9 +135,10 @@ def login():
         # this assumes you have a login.html in your templates directory
         return render_template("login.html")
 
-
-
-
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=True)
