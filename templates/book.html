@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Booking Flight {{ flight.airline_name }} {{ flight.flight_number }}</h1>
+
+    <h2>Flight Information</h2>
+    <p>Departure Airport: {{ flight.departure_airport }}</p>
+    <p>Departure Time: {{ flight.departure_date_time }}</p>
+    <p>Arrival Airport: {{ flight.arrival_airport }}</p>
+    <p>Arrival Time: {{ flight.arrival_date_time }}</p>
+    <p>Base Price: {{ flight.base_price }}</p>
+
+    <h2>Payment Information</h2>
+    <form action="{{ url_for('book', airline=flight.airline_name, flight_number=flight.flight_number, departure_time=flight.departure_date_time) }}" method="POST">
+        <label for="card_type">Card Type:</label><br>
+        <input type="text" id="card_type" name="card_type"><br>
+        <label for="card_number">Card Number:</label><br>
+        <input type="text" id="card_number" name="card_number"><br>
+        <label for="name_on_card">Name on Card:</label><br>
+        <input type="text" id="name_on_card" name="name_on_card"><br>
+        <label for="expiration_date">Expiration Date (YYYY-MM-DD):</label><br>
+        <input type="text" id="expiration_date" name="expiration_date"><br>
+        <input type="submit" value="Book Flight">
+    </form>
+{% endblock %}
