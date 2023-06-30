@@ -111,7 +111,7 @@ def search():
 			cursor.excute(query,(destination_city, source_city, return_date))
 			return_flights = cursor.fetchall()
 		else:
-			
+			pass
 	cursor.close()
 	error =  None
 
