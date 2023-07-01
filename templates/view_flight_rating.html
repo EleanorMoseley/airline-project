@@ -1,0 +1,24 @@
+<!--
+    View Flight Rating
+    Airline name: XXX
+    flight_number: XXX
+
+    click -> View
+
+    card view
+    -> Average Rating: xxx
+    -> All the Comments: xxx
+    -> All the rating: xxx
+-->
+
+{% extends "base.html" %}
+{% block content %}
+<h1>View Flight Rating</h1>
+<form action="/view_flight_rating", method="POST">
+    <label for="airline_name">Airline Name:</label><br>
+    <input type="text" id="airline_name" name="airline_name" value=""><br>
+    <label for="flight_number">Flight Number:</label><br>
+    <input type="text" id="flight_number" name="flight_number" value=""><br>
+    <input type="submit" value="View">
+</form>
+{% endblock %}
