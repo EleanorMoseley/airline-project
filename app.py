@@ -118,7 +118,7 @@ def status():
     date = request.form.get("date")
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Flight WHERE airline_name = %s AND flight_number = %s AND departure_time = %s", (airline, flight_number, date))
+        cursor.execute("SELECT * FROM Flight WHERE airline_name = %s AND flight_number = %s AND departure_date_time = %s", (airline, flight_number, date))
         flight = cursor.fetchone()
 
     return render_template("flight_status.html", flight=flight)
