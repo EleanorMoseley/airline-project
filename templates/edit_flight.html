@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit Flight</h1>
+<form method="POST">
+    <label for="departure_airport">Departure Airport:</label><br>
+    <input type="text" id="departure_airport" name="departure_airport" value="{{ flight.departure_airport }}"><br>
+    <label for="arrival_airport">Arrival Airport:</label><br>
+    <input type="text" id="arrival_airport" name="arrival_airport" value="{{ flight.arrival_airport }}"><br>
+    <label for="departure_time">Departure Time:</label><br>
+    <input type="text" id="departure_time" name="departure_date_time" value="{{ flight.departure_date_time }}"><br>
+    <label for="arrival_time">Arrival Time:</label><br>
+    <input type="text" id="arrival_time" name="arrival_date_time" value="{{ flight.arrival_date_time }}"><br>
+    <label for="price">Price:</label><br>
+    <input type="text" id="price" name="base price" value="{{ flight.base_price }}"><br>
+    <input type="submit" value="Update">
+</form>
+{% endblock %}

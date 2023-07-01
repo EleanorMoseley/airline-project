@@ -237,11 +237,11 @@ def edit_flight(flight_number):
 
     with connection.cursor() as cursor:
         if request.method == "POST":
-            new_departure_time = request.form.get("departure_time")
-            new_arrival_time = request.form.get("arrival_time")
-            new_status = request.form.get("status")
+            new_departure_date_time = request.form.get("departure_date_time")
+            new_arrival_date_time = request.form.get("arrival_date_time")
+            #new_status = request.form.get("status")
 
-            cursor.execute("UPDATE Flight SET departure_time = %s, arrival_time = %s, status = %s WHERE flight_number = %s", (new_departure_time, new_arrival_time, new_status, flight_number))
+            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time, flight_number))
 
             # Commit the transaction
             connection.commit()
@@ -266,11 +266,11 @@ def add_flight():
     with connection.cursor() as cursor:
         if request.method == "POST":
             flight_number = request.form.get("flight_number")
-            departure_time = request.form.get("departure_time")
-            arrival_time = request.form.get("arrival_time")
+            departure_date_time = request.form.get("departure_date_time")
+            arrival_date_time = request.form.get("arrival_date_time")
             status = request.form.get("status")
 
-            cursor.execute("INSERT INTO Flight (flight_number, departure_time, arrival_time, status) VALUES (%s, %s, %s, %s)", (flight_number, departure_time, arrival_time, status))
+            cursor.execute("INSERT INTO Flight (flight_number, departure_date_time, arrival_date_time) VALUES (%s, %s, %s, %s)", (flight_number, departure_date_time, arrival_date_time ))
 
             # Commit the transaction
             connection.commit()
