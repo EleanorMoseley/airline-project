@@ -17,16 +17,17 @@
 		<input type="text" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>
 	</div>
 	<button type="button" onclick="addPhoneNumber()">Add Phone Number</button>
-	<input type="text" name="name" id="name" placeholder="Name (Customer only)"/>
-	<input type="text" name="building_number" id="building_number" placeholder="Building Number (Customer only)"/>
-	<input type="text" name="street" id="street" placeholder="Street (Customer only)"/>
-	<input type="text" name="city" id="city" placeholder="City (Customer only)"/>
-	<input type="text" name="state" id="state" placeholder="State (Customer only)"/>
-	<input type="text" name="phone_number" id="phone_number" placeholder="Phone Number (Customer only)"/>
-	<input type="text" name="passport_number" id="passport_number" placeholder="Passport Number (Customer only)"/>
-	<input type="text" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)"/>
-	<input type="text" name="passport_country" id="passport_country" placeholder="Passport Country (Customer only)"/>
-	<input type="text" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth"/>
+	<button type="button" onclick="removePhoneNumber()" style="display: none;" id="remove_phone_number">Remove Phone Number</button>
+	<input type="text" name="name" id="name" placeholder="Name (Customer only)" style="display: block;"/>
+	<input type="text" name="building_number" id="building_number" placeholder="Building Number (Customer only)" style="display: block;"/>
+	<input type="text" name="street" id="street" placeholder="Street (Customer only)" style="display: block;"/>
+	<input type="text" name="city" id="city" placeholder="City (Customer only)" style="display: block;"/>
+	<input type="text" name="state" id="state" placeholder="State (Customer only)" style="display: block;"/>
+	<input type="text" name="phone_number" id="phone_number" placeholder="Phone Number (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_number" id="passport_number" placeholder="Passport Number (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_country" id="passport_country" placeholder="Passport Country (Customer only)" style="display: block;"/>
+	<input type="text" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth" style="display: block;"/>
 	<input type="submit" value="Register" style="text-align: center;"/>
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>
@@ -43,6 +44,7 @@
 		document.getElementById('last_name').style.display = isCustomer ? 'none' : 'block';
 		document.getElementById('airline_name').style.display = isCustomer ? 'none' : 'block';
 		document.getElementById('phone_numbers_staff').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('remove_phone_number').style.display = isCustomer ? 'none' : 'block';
 		document.getElementById('name').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('building_number').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('street').style.display = isCustomer ? 'block' : 'none';
@@ -52,12 +54,20 @@
 		document.getElementById('passport_number').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('passport_expiration').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('passport_country').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('date_of_birth').style.display = isCustomer ? 'block' : 'none';
 	}
 
 	function addPhoneNumber() {
 		var div = document.createElement('div');
 		div.innerHTML = '<input type="text" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>';
 		document.getElementById('phone_numbers_staff').appendChild(div);
+	}
+
+	function removePhoneNumber() {
+		const phoneNumbersDiv = document.getElementById('phone_numbers_staff');
+		if (phoneNumbersDiv.children.length > 1) {
+			phoneNumbersDiv.removeChild(phoneNumbersDiv.lastChild);
+		}
 	}
 </script>
 </body>
