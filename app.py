@@ -17,7 +17,10 @@ connection = pymysql.connect(host='localhost',
 @app.route("/")
 def home():
     return render_template("index.html")
+@app.route("/searchs", methods=["GET"])
+def searchs():
 
+    return render_template("home.html")
 @app.route("/search", methods=["POST"])
 def search():
     source = request.form.get("source")
@@ -58,7 +61,7 @@ def confirm_booking(flight_number):
 
     with connection.cursor() as cursor:
         # Get the airline_name and departure_date_time for the given flight_number
-        cursor.execute("SELECT airline_name, departure_date_time FROM Flight WHERE flight_number = %s", (flight_number,))
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", (flight_number,))
         flight = cursor.fetchone()
 
         if flight is None:
@@ -68,7 +71,7 @@ def confirm_booking(flight_number):
         cursor.execute("SELECT MAX(id) AS max_id FROM Ticket")
         max_id = cursor.fetchone()["max_id"]
         ticket_id = max_id + 1 if max_id is not None else 1
-
+        print(flight)
         # Add the new booking to the Ticket table
         cursor.execute("INSERT INTO Ticket (id, customer_email, airline_name, flight_number, departure_date_time, sold_price, payment_info_card_type, payment_info_card_number, payment_info_name_on_card, payment_info_expiration_date, purchase_date_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                        (ticket_id, email, flight["airline_name"], flight_number, flight["departure_date_time"], flight["base_price"], 'Credit', card_number, user["name"], expiry_date, purchase_date_time))
