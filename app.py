@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port = 8889,
+            
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -244,7 +244,7 @@ def status():
 
     return render_template("flight_status.html", flight=flight)
 
-@app.route("/register", methods=["GET", "POST"])
+"""@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         name = request.form.get("name")
@@ -272,6 +272,51 @@ def register():
         # this assumes you have a register.html in your templates directory
         return render_template("index.html")
 
+
+"""
+@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        role = request.form.get("role")
+        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
+
+        with connection.cursor() as cursor:
+            if role == "customer":
+                name = request.form.get("name")
+                email = request.form.get("email")
+                building_number = request.form.get("building_number")
+                street = request.form.get("street")
+                city = request.form.get("city")
+                state = request.form.get("state")
+                phone_number = request.form.get("phone_number")
+                passport_number = request.form.get("passport_number")
+                passport_expiration = request.form.get("passport_expiration")
+                passport_country = request.form.get("passport_country")
+                date_of_birth = request.form.get("date_of_birth")
+                cursor.execute("INSERT INTO Customer (email, name, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                               (email, name, password, building_number, street, city, state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth))
+
+            elif role == "staff":
+                username = request.form.get("username")
+                first_name = request.form.get("first_name")
+                last_name = request.form.get("last_name")
+                date_of_birth = request.form.get("date_of_birth")
+                airline_name = request.form.get("airline_name")
+                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", (username, password, first_name, last_name, date_of_birth, airline_name))
+
+                phone_numbers = request.form.getlist("phone_number_staff[]")
+                for phone_number in phone_numbers:
+                    cursor.execute("INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (username, phone_number))
+
+            connection.commit()
+            cursor.close()
+        return redirect(url_for("home"))
+
+    if request.method == "GET":
+        return render_template('register.html')
+    else:
+        return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -441,6 +486,27 @@ def add_airport():
         return redirect(url_for("staffhome"))
     
     return render_template('add_airport.html')
+
+
+@app.route("/view_flight_rating", methods=["GET", "POST"])
+def view_flight_rating():
+    if 'username' not in session:
+        return redirect(url_for('stafflogin'))
+    if request.method == "POST":
+        airline_name = request.form.get("airline_name")
+        flight_number = request.form.get("flight_number")
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT rating,comment FROM Rate WHERE airline_name = %s and flight_number = %s", [airline_name, flight_number])
+            rates = cursor.fetchall()
+        return render_template(("flight_rating_result.html"), rates=rates)
+    return render_template("view_flight_rating.html")
+
+
+@app.route("/flight_rating", methods=["GET", "POST"])
+def flight_rating():
+    return render_template("flight_rating_result.html")
+
 
 @app.route("/customers")
 def customers():

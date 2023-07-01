@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Flight Rating Result</h1>
+{% for rate in rates %}
+    <div style="border: 1px solid #000; padding: 10px; margin-bottom: 10px;">
+        <h2>Flight Number: {{rate.flight_number}}</h2>
+        <p>Airline Name: {{rate.airline_name}}</p>
+        <p>Rating: {{rate.rating}}</p>
+        <p>Comment: {{rate.comment}}</p>
+    </div>
+{% else %}
+    <p>No flights found</p>
+{% endfor %}
+{% endblock %}
