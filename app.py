@@ -268,6 +268,7 @@ def login():
 def logout():
     if 'user' in session:
         session.pop('user')
+        session.pop('role')
     return redirect('/')
 
 @app.route("/my_tickets")
