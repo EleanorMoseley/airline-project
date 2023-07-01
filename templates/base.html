@@ -34,12 +34,12 @@
 <body>
     <nav>
         <ul>
-            {% if (session['role'] == 'customer') and ('user' in session) %}
+            {% if (session['role'] == 'customer')  %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href= "{{ url_for('customerinfo')}}" > Account </a></li>
                 <li><a href="{{ url_for('my_tickets') }}">My Tickets</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            {% elif (session['role'] == 'staff') and ('user' in session) %}
+            {% elif (session['role'] == 'staff') %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('add_flight') }}">Add Flight</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>

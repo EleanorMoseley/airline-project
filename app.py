@@ -168,6 +168,7 @@ def confirm_booking(flight_number):
 
 @app.route("/staffhome", methods=['GET', 'POST'])
 def staffhome():
+    print(session['role'])
     return render_template('staffHome.html')
 
 
@@ -184,8 +185,8 @@ def stafflogin():
         cursor.close()
         error = None
         if (data):
-            session['username'] = username
-            session["role"] = "Staff"
+            session['user'] = username
+            session["role"] = "staff"
             return redirect(url_for('staffhome'))
         else:
             error = 'Invalid login or username'
@@ -267,8 +268,7 @@ def login():
 @app.route('/logout')
 def logout():
     if 'user' in session:
-        session.pop('user')
-        session.pop('role')
+        session.clear()
     return redirect('/')
 
 @app.route("/my_tickets")
