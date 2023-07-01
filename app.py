@@ -6,10 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
+                             port = 8889,
                              user='root',
-                             password = '',
-                            #  port = 8889,
-                            #  password='root',
+                             password='root',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -35,6 +34,85 @@ def book(flight_number):
         cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
         flight = cursor.fetchone()
     return render_template("book.html", flight=flight)
+
+@app.route("/customerinfo", methods = ["GET", "POST"])
+def customerinfo():
+    
+    # list = ['name', 'phone_number', 'date_of_birth', 'address_street', 'address_city', 
+    #     'address_state', 'address_building_number', 'passport_number', 'passport_expiration', 'passport_country']
+    updatedict = {'name': '',
+            'phone_number':'', 
+            'date_of_birth':'', 
+            'address_street':'', 
+            'address_city':'', 
+            'address_state':'', 
+            'address_building_number':'', 
+            'passport_number':'', 
+            'passport_expiration':'', 
+            'passport_country':''}
+    if request.method == "GET":
+        if (session.get('logged_in')==False):
+            return redirect(url_for('login'))
+        user = session['user']
+        email = user['email']
+        with connection.cursor() as cursor:
+            query = 'SELECT * FROM Customer WHERE email = %s'
+            cursor.execute(query, (email))
+            data = cursor.fetchone()
+            cursor.close()
+        for key in updatedict:
+                var = str(data[key])
+                print ("VAR: ", key, " ", var)
+                if var == 'None' or var.isspace() or len(var)<1:
+                    continue
+                else:
+                    updatedict[key]=var; 
+        return render_template('customerinfo.html', name=updatedict['name'], email=email, phone_number=updatedict['phone_number'], date_of_birth = updatedict['date_of_birth'],
+        address_street=updatedict['address_street'], address_city = updatedict['address_city'], address_state=updatedict['address_state'], address_building_number=updatedict['address_building_number'], 
+        passport_expiration = updatedict['passport_expiration'], passport_number = updatedict['passport_number'], passport_country = updatedict['passport_country'])
+    if request.method == "POST":
+        if(session.get('logged_in')== False):
+            return redirect(url_for('login'))
+        user = session['user']
+        email = user['email']
+        with connection.cursor() as cursor:
+            changestring = ''
+            for key in updatedict:
+                var = str(request.form.get(key))
+                # print ("VAR: ", key, " ", var)
+                if var == 'None' or var.isspace() or len(var)<1:
+                    changestring += (", %s = Null" % (key))
+
+                else:
+                    changestring += (", %s = '%s'" % (key, var))
+            print ("CHANGESTRINGGG", changestring)
+            if (len(changestring)>1): 
+                changestring = changestring[1:]
+                print("UPDATE CUSTOMER SET %s WHERE email = '%s'" % (changestring, email))
+                cursor.execute("UPDATE CUSTOMER SET %s WHERE email = '%s'" % (changestring, email))
+                print ("CHANGESTRINGGG", changestring)
+                connection.commit()
+            cursor.close()
+    user = session['user']
+    with connection.cursor() as cursor:
+        query = 'SELECT * FROM Customer WHERE email = %s'
+        cursor.execute(query, (email))
+        data = cursor.fetchone()
+        cursor.close()
+        for key in updatedict:
+                var = str(data[key])
+                print ("VAR: ", key, " ", var)
+                if var == 'None' or var.isspace() or len(var)<1:
+                    continue
+                else:
+                    updatedict[key]=var; 
+    return render_template('customerinfo.html', name=updatedict['name'], email=email, phone_number=updatedict['phone_number'], date_of_birth = updatedict['date_of_birth'],
+    address_street=updatedict['address_street'], address_city = updatedict['address_city'], address_state=updatedict['address_state'], address_building_number=updatedict['address_building_number'], 
+    passport_expiration = updatedict['passport_expiration'], passport_number = updatedict['passport_number'], passport_country = updatedict['passport_country'])
+    
+@app.route("/userhome")
+def userhome():
+    return render_template("home.html")
 
 @app.route("/confirm_booking/<flight_number>", methods=["POST"])
 def confirm_booking(flight_number):
@@ -147,9 +225,7 @@ def register():
 def login():
     if request.method == "POST":
         email = request.form.get("email")
-        # for testing purposes, the following line checks unhashed passwords
-        password = request.form.get("password")   
-        #password = hashlib.md5(request.form.get("password").encode()).hexdigest()
+        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
 
 
         with connection.cursor() as cursor:
