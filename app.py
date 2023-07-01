@@ -324,6 +324,36 @@ def customers():
         customers = cursor.fetchall()
 
     return render_template("customers.html", customers=customers)
+@app.route("/rate_flight", methods=["GET", "POST"])
+def rate_flight():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        flight_id = request.form.get("flight_id")
+        rating = request.form.get("rating")
+        comment = request.form.get("comment")
+        email = session["username"]
+        
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO Flight_Rating (flight_id, email, rating, comment) VALUES (%s, %s, %s, %s)", 
+                            (flight_id, email, rating, comment))
+            connection.commit()
+
+        return redirect(url_for("home"))
+    
+    return render_template('rate_flight.html')
+@app.route("/spending")
+def spending():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    email = session["username"]
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT MONTH(purchase_date) AS Month, YEAR(purchase_date) AS Year, SUM(price) AS Total FROM Ticket WHERE email = %s AND purchase_date > DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) GROUP BY YEAR(purchase_date), MONTH(purchase_date)", (email,))
+        spending = cursor.fetchall()
+
+    return render_template('spending.html', spending=spending)
 
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
