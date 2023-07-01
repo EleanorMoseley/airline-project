@@ -41,6 +41,7 @@
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% elif (session['role'] == 'staff') %}
                 <li><a href="{{ url_for('staffhome') }}">Home</a></li>
+                <li><a href="{{ url_for('staffinfo') }}">Account</a></li>
                 <li><a href="{{ url_for('add_flight') }}">Add Flight</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% else %}

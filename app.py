@@ -162,12 +162,52 @@ def confirm_booking(flight_number):
 
     return redirect(url_for("home"))
 
+@app.route('/staffinfo', methods = ["GET", "POST"])
+def staffinfo():
+    updatedict = {'first_name': '',
+                'last_name':'', 
+                'date_of_birth':'', 
+                'airline_name':''}
+    if request.method == "GET":
+        phonenos = []
+        if (session.get('logged_in')==False):
+            return redirect(url_for('stafflogin'))
+        user = session['user']
+        with connection.cursor() as cursor:
+            query = 'SELECT * FROM AirlineStaff WHERE username = %s'
+            cursor.execute(query, (user))
+            data = cursor.fetchone()
+            cursor.close()
+        for key in updatedict:
+                var = str(data[key])
+                print ("VAR: ", key, " ", var)
+                if var == 'None' or var.isspace() or len(var)<1:
+                    continue
+                else:
+                    updatedict[key]=var; 
+        with connection.cursor() as cursor:
+            query = 'SELECT phone_number FROM StaffPhone WHERE username = %s'
+            cursor.execute(query, (user))
+            data = cursor.fetchall()
+            cursor.close() 
+        for i in data:
+            phonenos.append(str(i['phone_number']))
+        emails = []
+        with connection.cursor() as cursor:
+            query = 'SELECT email FROM StaffEmail WHERE username = %s'
+            cursor.execute(query, (user))
+            data = cursor.fetchall()
+            cursor.close() 
+        for i in data:
+            emails.append(str(i['email']))
+        print (phonenos)
+        return render_template('staffinfo.html', username=user, first_name=updatedict['first_name'], last_name = updatedict['last_name'], date_of_birth = updatedict['date_of_birth'],
+        airline_name=updatedict['airline_name'], phone_number=phonenos, emails = emails)
+    
 
 @app.route("/staffhome", methods=['GET', 'POST'])
 def staffhome():
-    print(session['role'])
     return render_template('staffHome.html')
-
 
 @app.route('/stafflogin', methods=['GET', 'POST'])
 def stafflogin():
