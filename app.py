@@ -6,9 +6,10 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                           
                              user='root',
-                             password='',
+                             password = '',
+                            #  port = 8889,
+                            #  password='root',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
