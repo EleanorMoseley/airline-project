@@ -290,7 +290,7 @@ def add_airplane():
         seats = request.form.get("seats")
         
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO Airplane (airplane_id, airline_name, seats) VALUES (%s, %s, %s)", (airplane_id, airline_name, seats))
+            cursor.execute("INSERT INTO Airplane (id, airline_name, num_seats) VALUES (%s, %s, %s)", (airplane_id, airline_name, seats))
             connection.commit()
 
         return redirect(url_for("staffhome"))
@@ -306,7 +306,7 @@ def add_airport():
         airport_city = request.form.get("airport_city")
         
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO Airport (airport_name, airport_city) VALUES (%s, %s)", (airport_name, airport_city))
+            cursor.execute("INSERT INTO Airport (name, city) VALUES (%s, %s)", (airport_name, airport_city))
             connection.commit()
 
         return redirect(url_for("staffhome"))
