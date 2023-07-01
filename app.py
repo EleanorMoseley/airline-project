@@ -215,11 +215,20 @@ def register():
         # role = request.form.get("role")
 
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO Customer (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
-            connection.commit()
+            # Check if user already exists
+            cursor.execute("SELECT * FROM Customer WHERE email = %s", (email,))
+            existing_user = cursor.fetchone()
+            if existing_user:
+                # If user exists, render the registration page again with an error message
+                return render_template("register.html", error="User with this email already exists.")
+            else:
+                # If user does not exist, register the user
+                cursor.execute("INSERT INTO Customer (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
+                connection.commit()
             cursor.close()
         return redirect(url_for("home"))
-    if request.method == "GET":
+
+    elif request.method == "GET":
         return render_template('register.html')
     else:
         # this assumes you have a register.html in your templates directory
