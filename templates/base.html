@@ -5,58 +5,112 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
         }
+
         nav {
             background-color: #333;
             color: white;
-            padding: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
         nav ul {
             list-style-type: none;
             padding: 0;
+            display: flex;
+            gap: 10px;
         }
-        nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
+
         nav ul li a {
             color: white;
             text-decoration: none;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
         }
+
         nav ul li a:hover {
             color: #ddd;
+            background-color: #555;
         }
+
         .content {
-            margin: 20px;
+            margin: 40px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
-        
+
         form {
-            width: 300px;
+            max-width: 500px;
             margin: 0 auto;
+            padding: 20px;
         }
-        
-        h2 {
+
+        h2, h3 {
             text-align: center;
+            color: #333;
         }
-        
+
         .form-group {
             margin-bottom: 15px;
         }
-        
-        .form-group input {
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            box-sizing: border-box;
         }
-        
-        input[type="submit"] {
+
+        .form-group button {
             background-color: #4CAF50;
             color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        
+
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+
+        .form-group button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        input[type="submit"] {
+            background-color: #008CBA;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #007B9A;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -77,7 +131,7 @@
                 <li><a href="{{ url_for('register') }}">Register</a></li>
                 <li><a href="{{ url_for('login') }}">Login</a></li>
             {% endif %}
-    </ul>
+        </ul>
     </nav>
     <div class="content">
         {% block content %}{% endblock %}
