@@ -1,7 +1,6 @@
-<html>
-    <head>
-        <h1> Welcome xxx</h1>
-    </head>
+{% extends "base.html" %}
+
+{% block content %}
     <body>
         <form action="/stafflogin" method="post">
             <p>All the other functions</p>
@@ -10,3 +9,4 @@
         <a href="/logout">Logout</a>
     </body>
 </html>
+{% endblock %}
