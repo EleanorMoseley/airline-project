@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                           
+                             port = 8889,
                              user='root',
-                             password='',
+                             password='root',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -436,8 +436,6 @@ def rate_flight():
         return redirect(url_for("home"))
     
     return render_template('rate_flight.html')
-
-
 @app.route("/spending")
 def spending():
     if 'username' not in session:
