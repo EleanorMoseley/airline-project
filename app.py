@@ -102,6 +102,7 @@ def stafflogin():
         error = None
         if (data):
             session['username'] = username
+            session["role"] = "Staff"
             return redirect(url_for('staffhome'))
         else:
             error = 'Invalid login or username'
@@ -164,6 +165,7 @@ def login():
             
             if (user): 
                 session["user"] = user
+                session["role"] = "Customer"
                 return render_template('home.html')
                 
             else:
@@ -178,6 +180,117 @@ def logout():
         session.pop('user')
     return redirect('/')
 
+@app.route("/my_tickets")
+def my_tickets():
+    # Redirect to login page if user is not logged in
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    user = session["user"]
+    email = user["email"]
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM Ticket WHERE customer_email = %s", [email])
+        tickets = cursor.fetchall()
+
+    return render_template("my_tickets.html", tickets=tickets)
+
+
+@app.route("/cancel_booking/<int:ticket_id>")
+def cancel_booking(ticket_id):
+    # Redirect to login page if user is not logged in
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    with connection.cursor() as cursor:
+        # First, ensure that the ticket belongs to the logged-in user
+        cursor.execute("SELECT * FROM Ticket WHERE id = %s AND customer_email = %s", (ticket_id, session["user"]["email"]))
+        ticket = cursor.fetchone()
+
+        if ticket is None:
+            return render_template("error.html", message="No such ticket.")
+
+        # Delete the ticket
+        cursor.execute("DELETE FROM Ticket WHERE id = %s", [ticket_id])
+
+        # Commit the transaction
+        connection.commit
+@app.route("/staff_flights")
+def staff_flights():
+    # Redirect to login page if user is not logged in
+    if "username" not in session:
+        return redirect(url_for("stafflogin"))
+
+    username = session["username"]
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM Flight INNER JOIN AirlineStaff ON Flight.airline_name = AirlineStaff.airline_name WHERE AirlineStaff.username = %s", [username])
+        flights = cursor.fetchall()
+
+    return render_template("staff_flights.html", flights=flights)
+
+@app.route("/edit_flight/<int:flight_number>", methods=["GET", "POST"])
+def edit_flight(flight_number):
+    # Redirect to login page if user is not logged in
+    if "username" not in session:
+        return redirect(url_for("stafflogin"))
+
+    with connection.cursor() as cursor:
+        if request.method == "POST":
+            new_departure_time = request.form.get("departure_time")
+            new_arrival_time = request.form.get("arrival_time")
+            new_status = request.form.get("status")
+
+            cursor.execute("UPDATE Flight SET departure_time = %s, arrival_time = %s, status = %s WHERE flight_number = %s", (new_departure_time, new_arrival_time, new_status, flight_number))
+
+            # Commit the transaction
+            connection.commit()
+
+            return redirect(url_for("staff_flights"))
+
+        # For GET requests, fetch the flight and render the form
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
+        flight = cursor.fetchone()
+
+        if flight is None:
+            return render_template("error.html", message="No such flight.")
+
+        return render_template("edit_flight.html", flight=flight)
+
+@app.route("/add_flight", methods=["GET", "POST"])
+def add_flight():
+    # Redirect to login page if user is not logged in
+    if "username" not in session:
+        return redirect(url_for("stafflogin"))
+
+    with connection.cursor() as cursor:
+        if request.method == "POST":
+            flight_number = request.form.get("flight_number")
+            departure_time = request.form.get("departure_time")
+            arrival_time = request.form.get("arrival_time")
+            status = request.form.get("status")
+
+            cursor.execute("INSERT INTO Flight (flight_number, departure_time, arrival_time, status) VALUES (%s, %s, %s, %s)", (flight_number, departure_time, arrival_time, status))
+
+            # Commit the transaction
+            connection.commit()
+
+            return redirect(url_for("staff_flights"))
+
+        # For GET requests, render the form
+        return render_template("add_flight.html")
+
+@app.route("/customers")
+def customers():
+    # Redirect to login page if user is not logged in
+    if "username" not in session:
+        return redirect(url_for("stafflogin"))
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM Customer")
+        customers = cursor.fetchall()
+
+    return render_template("customers.html", customers=customers)
 
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)

@@ -1,11 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Airline</title>
+    <title>Airline Reservation</title>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <nav>
+        <ul>
+            {% if 'user' in session %}
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                {% if session['role'] == "Customer" %}
+                    <li><a href="{{ url_for('my_tickets') }}">My Tickets</a></li>
+                {% elif session['role'] == "Staff" %}
+                    <li><a href="{{ url_for('staff_flights') }}">Flights</a></li>
+                    <li><a href="{{ url_for('customers') }}">Customers</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div>
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>
