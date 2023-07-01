@@ -248,8 +248,8 @@ def status():
 def register():
     if request.method == "POST":
         role = request.form.get("role")
-        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
-
+        password = hashlib.md5(request.form.get(
+            "password").encode()).hexdigest()
         with connection.cursor() as cursor:
             if role == "customer":
                 name = request.form.get("name")
@@ -265,23 +265,21 @@ def register():
                 date_of_birth = request.form.get("date_of_birth")
                 cursor.execute("INSERT INTO Customer (email, name, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                                (email, name, password, building_number, street, city, state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth))
-
             elif role == "staff":
                 username = request.form.get("username")
                 first_name = request.form.get("first_name")
                 last_name = request.form.get("last_name")
-                date_of_birth = request.form.get("date_of_birth")
+                date_of_birth = request.form.get("date_of_birth_staff")
                 airline_name = request.form.get("airline_name")
-                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", (username, password, first_name, last_name, date_of_birth, airline_name))
-
+                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", (
+                    username, password, first_name, last_name, date_of_birth, airline_name))
                 phone_numbers = request.form.getlist("phone_number_staff[]")
                 for phone_number in phone_numbers:
-                    cursor.execute("INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (username, phone_number))
-
+                    cursor.execute(
+                        "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (username, phone_number))
             connection.commit()
             cursor.close()
         return redirect(url_for("home"))
-
     if request.method == "GET":
         return render_template('register.html')
     else:

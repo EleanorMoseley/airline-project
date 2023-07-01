@@ -2,12 +2,6 @@
 
 {% block content %}
 <body>
-
-	<style>
-		label {
-			font-size: 10px; 
-		}
-	</style>
 <form action="/register" method="POST">
 	<select name="role" id="role" onchange="toggleRole(this)">
 		<option value="customer">Customer</option>
@@ -19,11 +13,13 @@
 	<input type="text" name="first_name" id="first_name" placeholder="First Name (Staff only)" style="display: none;"/>
 	<input type="text" name="last_name" id="last_name" placeholder="Last Name (Staff only)" style="display: none;"/>
 	<input type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
+    <input type="text" name="date_of_birth_staff" id="date_of_birth_staff" placeholder="DOB(Staff only)" style="display: none;"/>
+
 	<div id="phone_numbers_staff" style="display: none;">
 		<input type="text" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>
-	</div>
-	<button type="button" onclick="addPhoneNumber()">Add Phone Number</button>
-	<button type="button" onclick="removePhoneNumber()" style="display: none;" id="remove_phone_number">Remove Phone Number</button>
+	    <button type="button" onclick="addPhoneNumber()">Add Phone Number</button>
+	    <button type="button" onclick="removePhoneNumber()" style="display: none;" id="remove_phone_number">Remove Phone Number</button>
+    </div>
 	<input type="text" name="name" id="name" placeholder="Name (Customer only)" style="display: block;"/>
 	<input type="text" name="building_number" id="building_number" placeholder="Building Number (Customer only)" style="display: block;"/>
 	<input type="text" name="street" id="street" placeholder="Street (Customer only)" style="display: block;"/>
@@ -31,11 +27,9 @@
 	<input type="text" name="state" id="state" placeholder="State (Customer only)" style="display: block;"/>
 	<input type="text" name="phone_number" id="phone_number" placeholder="Phone Number (Customer only)" style="display: block;"/>
 	<input type="text" name="passport_number" id="passport_number" placeholder="Passport Number (Customer only)" style="display: block;"/>
-	<label for= "passport_expiration"> Passport Expir. Date </label>
-	<input type="date" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)" style="display: block;"/>
+	<input type="text" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)" style="display: block;"/>
 	<input type="text" name="passport_country" id="passport_country" placeholder="Passport Country (Customer only)" style="display: block;"/>
-	<label for = "date_of_birth"> Date of Birth </label>
-	<input type="date" name="date_of_birth" id="date_of_birth" style="display: block;"/>
+	<input type="text" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth" style="display: block;"/>
 	<input type="submit" value="Register" style="text-align: center;"/>
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>
@@ -63,6 +57,7 @@
 		document.getElementById('passport_expiration').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('passport_country').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('date_of_birth').style.display = isCustomer ? 'block' : 'none';
+        document.getElementById('date_of_birth_staff').style.display = isCustomer ? 'none' : 'block';
 	}
 
 	function addPhoneNumber() {
