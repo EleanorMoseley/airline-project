@@ -1,6 +1,6 @@
-<html>
-<head>
-</head>
+{% extends "base.html" %}
+
+{% block content %}
 <body>
 <form action="/register" method="POST">
 	<input type="text" name = "username" placeholder="username" required style="text-align: center;"/> </br>
@@ -14,3 +14,4 @@
 <a href="/">Go back</a>
 </body>
 </html>
+{% endblock %}

@@ -2,19 +2,45 @@
 <html>
 <head>
     <title>Airline Reservation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            color: #ddd;
+        }
+        .content {
+            margin: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Airline Reservations!</h1>
     <nav>
         <ul>
-            {% if 'user' in session %}
+            {% if session['role'] == 'customer' %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
-                {% if session['role'] == "Customer" %}
-                    <li><a href="{{ url_for('my_tickets') }}">My Tickets</a></li>
-                {% elif session['role'] == "Staff" %}
-                    <li><a href="{{ url_for('staff_flights') }}">Flights</a></li>
-                    <li><a href="{{ url_for('customers') }}">Customers</a></li>
-                {% endif %}
+                <li><a href="{{ url_for('my_tickets') }}">My Tickets</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% elif session['role'] == 'staff' %}
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('add_flight') }}">Add Flight</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
@@ -23,7 +49,7 @@
             {% endif %}
         </ul>
     </nav>
-    <div>
+    <div class="content">
         {% block content %}{% endblock %}
     </div>
 </body>

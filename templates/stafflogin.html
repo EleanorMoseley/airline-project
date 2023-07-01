@@ -1,8 +1,6 @@
-<html>
-    <head>
-        <h1>Staff Login</h1>
-    </head>
-    <body>
+{% extends "base.html" %}
+
+{% block content %}
     <form action="/stafflogin" method="POST">
         Username:<input type="username" placeholder="username" name="username"><br>
         Password: <input type="password" placeholder="password" name="password"><br>
@@ -11,5 +9,5 @@
 		<p class="error"><strong>Error:</strong> {{error}}</p>
 	    {% endif %}
     </form>
-    </body>
-</html>
+
+{% endblock %}
