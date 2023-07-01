@@ -235,6 +235,7 @@ def register():
 
 """
 @app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         role = request.form.get("role")
@@ -244,8 +245,10 @@ def register():
             if role == "customer":
                 name = request.form.get("name")
                 email = request.form.get("email")
-                address = request.form.get("address")
-                building_number, street, city, state = address.split(',')
+                building_number = request.form.get("building_number")
+                street = request.form.get("street")
+                city = request.form.get("city")
+                state = request.form.get("state")
                 phone_number = request.form.get("phone_number")
                 passport_number = request.form.get("passport_number")
                 passport_expiration = request.form.get("passport_expiration")
