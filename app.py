@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port = 8889,
+                           
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -218,7 +218,7 @@ def register():
             cursor.execute("INSERT INTO Customer (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
             connection.commit()
             cursor.close()
-        return redirect(url_for("index"))
+        return redirect(url_for("home"))
     if request.method == "GET":
         return render_template('register.html')
     else:
