@@ -252,31 +252,59 @@ def register():
             "password").encode()).hexdigest()
         with connection.cursor() as cursor:
             if role == "customer":
-                name = request.form.get("name")
-                email = request.form.get("email")
-                building_number = request.form.get("building_number")
-                street = request.form.get("street")
-                city = request.form.get("city")
-                state = request.form.get("state")
-                phone_number = request.form.get("phone_number")
-                passport_number = request.form.get("passport_number")
-                passport_expiration = request.form.get("passport_expiration")
-                passport_country = request.form.get("passport_country")
-                date_of_birth = request.form.get("date_of_birth")
-                cursor.execute("INSERT INTO Customer (email, name, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                               (email, name, password, building_number, street, city, state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth))
+                cursor.execute('Select * FROM customer WHERE email = \'%s\''% request.form.get('email'))
+                if (cursor.fetchone() != None):
+                    return render_template('register.html', error = "Email Already In Use")
+                customeratt = {
+                    'name' : '',
+                    'email' : '',
+                    'password' : '',
+                    'building_number' : '',
+                    'street' : '',
+                    'city' : '',
+                    'state' : '',
+                    'phone_number' : '',
+                    'passport_number' : '',
+                    'passport_expiration' : '',
+                    'passport_country' : '',
+                    'date_of_birth' : ''
+                }
+                for key in customeratt : 
+                    # val = request.form.get(key)
+                    customeratt[key] = str(request.form.get(key))
+                    if (len(customeratt[key]) <1 or customeratt[key] == 'None'):
+                        customeratt[key] = 'NULL'
+                    elif (key != 'date_of_birth' or "building_number" or 'passport_expiration'):
+                        customeratt[key] = "'" + customeratt[key] + "'"
+
+                print("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s)" % ', '.join(customeratt.values()))
+                cursor.execute("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES ( % s)" % ', '.join(customeratt.values()))
             elif role == "staff":
-                username = request.form.get("username")
-                first_name = request.form.get("first_name")
-                last_name = request.form.get("last_name")
-                date_of_birth = request.form.get("date_of_birth_staff")
-                airline_name = request.form.get("airline_name")
-                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", (
-                    username, password, first_name, last_name, date_of_birth, airline_name))
-                phone_numbers = request.form.getlist("phone_number_staff[]")
-                for phone_number in phone_numbers:
-                    cursor.execute(
-                        "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (username, phone_number))
+                cursor.execute('Select * from AirlineStaff WHERE username = \'%s\''% request.form.get('username'))
+                if (cursor.fetchone() != None):
+                    return render_template('register.html', error = "Username Already In Use")
+                staff = {
+                    'username' : '',
+                    'password' : '',
+                    'first_name' : '',
+                    'last_name': '',
+                    'date_of_birth': '',
+                    'airline_name': ''
+                }
+
+                for key in staff : 
+                    staff[key] = str(request.form.get(key))
+                    if (len(staff[key]) <1 or staff[key] == 'None'):
+                        staff[key] = 'NULL'
+                    elif (key != 'date_of_birth'):
+                        staff[key] = "'" + staff[key] + "'"
+
+                print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
+                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
+                # phone_numbers = request.form.getlist("phone_number_staff[]")
+                # for phone_number in phone_numbers:
+                #     cursor.execute(
+                #         "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (staff['username'], phone_number))
             connection.commit()
             cursor.close()
         return redirect(url_for("home"))
