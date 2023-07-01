@@ -402,6 +402,27 @@ def add_airport():
     
     return render_template('add_airport.html')
 
+
+@app.route("/view_flight_rating", methods=["GET", "POST"])
+def view_flight_rating():
+    if 'username' not in session:
+        return redirect(url_for('stafflogin'))
+    if request.method == "POST":
+        airline_name = request.form.get("airline_name")
+        flight_number = request.form.get("flight_number")
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT rating,comment FROM Rate WHERE airline_name = %s and flight_number = %s", [airline_name, flight_number])
+            rates = cursor.fetchall()
+        return render_template(("flight_rating_result.html"), rates=rates)
+    return render_template("view_flight_rating.html")
+
+
+@app.route("/flight_rating", methods=["GET", "POST"])
+def flight_rating():
+    return render_template("flight_rating_result.html")
+
+
 @app.route("/customers")
 def customers():
     # Redirect to login page if user is not logged in
