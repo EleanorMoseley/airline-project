@@ -16,10 +16,11 @@ connection = pymysql.connect(host='localhost',
 @app.route("/")
 def home():
     return render_template("index.html")
+
 @app.route("/searchs", methods=["GET"])
 def searchs():
-
     return render_template("home.html")
+
 @app.route("/search", methods=["POST"])
 def search():
     source = request.form.get("source")
@@ -31,6 +32,7 @@ def search():
         Flight = cursor.fetchall()
 
     return render_template("search_results.html", flights=Flight)
+
 @app.route("/book/<flight_number>", methods=["GET"])
 def book(flight_number):
     with connection.cursor() as cursor:
@@ -244,7 +246,7 @@ def login():
             
             if (user): 
                 session["user"] = user
-                session["role"] = "Customer"
+                session["role"] = "customer"
                 return render_template('home.html')
                 
             else:
@@ -375,6 +377,7 @@ def add_airplane():
         return redirect(url_for("staffhome"))
     
     return render_template('add_airplane.html')
+
 @app.route("/add_airport", methods=["GET", "POST"])
 def add_airport():
     if 'username' not in session:
@@ -403,6 +406,8 @@ def customers():
         customers = cursor.fetchall()
 
     return render_template("customers.html", customers=customers)
+
+
 @app.route("/rate_flight", methods=["GET", "POST"])
 def rate_flight():
     if 'username' not in session:
@@ -422,6 +427,8 @@ def rate_flight():
         return redirect(url_for("home"))
     
     return render_template('rate_flight.html')
+
+
 @app.route("/spending")
 def spending():
     if 'username' not in session:
