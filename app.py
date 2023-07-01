@@ -17,8 +17,8 @@ connection = pymysql.connect(host='localhost',
 def home():
     return render_template("index.html")
 
-@app.route("/searchs", methods=["GET"])
-def searchs():
+@app.route("/userhome")
+def userhome():
     return render_template("home.html")
 
 @app.route("/search", methods=["POST"])
@@ -115,9 +115,6 @@ def customerinfo():
     address_street=updatedict['address_street'], address_city = updatedict['address_city'], address_state=updatedict['address_state'], address_building_number=updatedict['address_building_number'], 
     passport_expiration = updatedict['passport_expiration'], passport_number = updatedict['passport_number'], passport_country = updatedict['passport_country'])
     
-@app.route("/userhome")
-def userhome():
-    return render_template("home.html")
 
 @app.route("/confirm_booking/<flight_number>", methods=["POST"])
 def confirm_booking(flight_number):
@@ -351,7 +348,7 @@ def edit_flight(flight_number):
 @app.route("/add_flight", methods=["GET", "POST"])
 def add_flight():
     # Redirect to login page if user is not logged in
-    if "username" not in session:
+    if "user" not in session:
         return redirect(url_for("stafflogin"))
 
     with connection.cursor() as cursor:
@@ -369,7 +366,7 @@ def add_flight():
             return redirect(url_for("staff_flights"))
 
         # For GET requests, render the form
-        return render_template("add_flight.html")
+        return render_template("add_flights.html")
 @app.route("/add_airplane", methods=["GET", "POST"])
 def add_airplane():
     if 'username' not in session:
