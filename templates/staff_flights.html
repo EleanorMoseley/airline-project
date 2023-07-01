@@ -6,8 +6,8 @@
     <div style="border: 1px solid #000; padding: 10px; margin-bottom: 10px;">
         <h2>Flight Number: {{ flight.flight_number }}</h2>
         <p>Airline: {{ flight.airline_name }}</p>
-        <p>Departure Time: {{ flight.departure_time }}</p>
-        <p>Arrival Time: {{ flight.arrival_time }}</p>
+        <p>Departure Time: {{ flight.departure_date_time }}</p>
+        <p>Arrival Time: {{ flight.arrival_date_time }}</p>
         <p>Status: {{ flight.status }}</p>
         <a href="{{ url_for('edit_flight', flight_number=flight.flight_number) }}">Edit</a>
     </div>
