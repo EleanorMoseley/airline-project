@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body>
+<form action="/register" method="POST">
+	<input type="text" name = "username" placeholder="username" required style="text-align: center;"/> </br>
+	<input type="password" name = "password" placeholder="password" required style="text-align: center;"/></br>
+	<input type="text" name = "email" placeholder="email" required style="text-align: center"/></br>
+	<input type="submit" value = Register style="text-align: center;"/>
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
+<a href="/">Go back</a>
+</body>
+</html>
+{% endblock %}
