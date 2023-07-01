@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Add Airplane</h1>
+<form method="POST">
+    <label for="airplane_id">Airplane ID:</label><br>
+    <input type="text" id="airplane_id" name="airplane_id"><br>
+    <label for="seats">Seats:</label><br>
+    <input type="number" id="seats" name="seats"><br>
+    <input type="submit" value="Add Airplane">
+</form>
+{% endblock %}

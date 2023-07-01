@@ -279,6 +279,39 @@ def add_flight():
 
         # For GET requests, render the form
         return render_template("add_flight.html")
+@app.route("/add_airplane", methods=["GET", "POST"])
+def add_airplane():
+    if 'username' not in session:
+        return redirect(url_for('stafflogin'))
+
+    if request.method == 'POST':
+        airplane_id = request.form.get("airplane_id")
+        airline_name = session["username"]
+        seats = request.form.get("seats")
+        
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO Airplane (airplane_id, airline_name, seats) VALUES (%s, %s, %s)", (airplane_id, airline_name, seats))
+            connection.commit()
+
+        return redirect(url_for("staffhome"))
+    
+    return render_template('add_airplane.html')
+@app.route("/add_airport", methods=["GET", "POST"])
+def add_airport():
+    if 'username' not in session:
+        return redirect(url_for('stafflogin'))
+
+    if request.method == 'POST':
+        airport_name = request.form.get("airport_name")
+        airport_city = request.form.get("airport_city")
+        
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO Airport (airport_name, airport_city) VALUES (%s, %s)", (airport_name, airport_city))
+            connection.commit()
+
+        return redirect(url_for("staffhome"))
+    
+    return render_template('add_airport.html')
 
 @app.route("/customers")
 def customers():
