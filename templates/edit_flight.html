@@ -10,6 +10,9 @@
     <input type="text" id="departure_time" name="departure_date_time" value="{{ flight.departure_date_time }}"><br>
     <label for="arrival_time">Arrival Time:</label><br>
     <input type="text" id="arrival_time" name="arrival_date_time" value="{{ flight.arrival_date_time }}"><br>
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" value="{{ flight.status }}" required>
+
     <label for="price">Price:</label><br>
     <input type="text" id="price" name="base price" value="{{ flight.base_price }}"><br>
     <input type="submit" value="Update">

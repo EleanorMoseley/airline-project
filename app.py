@@ -239,9 +239,9 @@ def edit_flight(flight_number):
         if request.method == "POST":
             new_departure_date_time = request.form.get("departure_date_time")
             new_arrival_date_time = request.form.get("arrival_date_time")
-            #new_status = request.form.get("status")
+            new_status = request.form.get("status")
 
-            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time, flight_number))
+            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time,new_status, flight_number))
 
             # Commit the transaction
             connection.commit()
@@ -270,7 +270,7 @@ def add_flight():
             arrival_date_time = request.form.get("arrival_date_time")
             status = request.form.get("status")
 
-            cursor.execute("INSERT INTO Flight (flight_number, departure_date_time, arrival_date_time) VALUES (%s, %s, %s, %s)", (flight_number, departure_date_time, arrival_date_time ))
+            cursor.execute("INSERT INTO Flight (flight_number, departure_date_time, arrival_date_time,status) VALUES (%s, %s, %s, %s)", (flight_number, departure_date_time, arrival_date_time, status ))
 
             # Commit the transaction
             connection.commit()
