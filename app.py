@@ -244,37 +244,6 @@ def status():
 
     return render_template("flight_status.html", flight=flight)
 
-"""@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
-        # role = request.form.get("role")
-
-        with connection.cursor() as cursor:
-            # Check if user already exists
-            cursor.execute("SELECT * FROM Customer WHERE email = %s", (email,))
-            existing_user = cursor.fetchone()
-            if existing_user:
-                # If user exists, render the registration page again with an error message
-                return render_template("register.html", error="User with this email already exists.")
-            else:
-                # If user does not exist, register the user
-                cursor.execute("INSERT INTO Customer (name, email, password) VALUES (%s, %s, %s)", (name, email, password))
-                connection.commit()
-            cursor.close()
-        return redirect(url_for("home"))
-
-    elif request.method == "GET":
-        return render_template('register.html')
-    else:
-        # this assumes you have a register.html in your templates directory
-        return render_template("index.html")
-
-
-"""
-@app.route("/register", methods=["GET", "POST"])
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -391,10 +360,10 @@ def cancel_booking(ticket_id):
 @app.route("/staff_flights")
 def staff_flights():
     # Redirect to login page if user is not logged in
-    if "username" not in session:
+    if "user" not in session:
         return redirect(url_for("stafflogin"))
 
-    username = session["username"]
+    username = session["user"]
 
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM Flight INNER JOIN AirlineStaff ON Flight.airline_name = AirlineStaff.airline_name WHERE AirlineStaff.username = %s", [username])
@@ -405,7 +374,7 @@ def staff_flights():
 @app.route("/edit_flight/<int:flight_number>", methods=["GET", "POST"])
 def edit_flight(flight_number):
     # Redirect to login page if user is not logged in
-    if "username" not in session:
+    if "user" not in session:
         return redirect(url_for("stafflogin"))
 
     with connection.cursor() as cursor:
@@ -454,12 +423,12 @@ def add_flight():
         return render_template("add_flights.html")
 @app.route("/add_airplane", methods=["GET", "POST"])
 def add_airplane():
-    if 'username' not in session:
+    if 'user' not in session:
         return redirect(url_for('stafflogin'))
 
     if request.method == 'POST':
         airplane_id = request.form.get("airplane_id")
-        airline_name = session["username"]
+        airline_name = session["user"]
         seats = request.form.get("seats")
         
         with connection.cursor() as cursor:
@@ -472,7 +441,7 @@ def add_airplane():
 
 @app.route("/add_airport", methods=["GET", "POST"])
 def add_airport():
-    if 'username' not in session:
+    if 'user' not in session:
         return redirect(url_for('stafflogin'))
 
     if request.method == 'POST':
@@ -490,7 +459,7 @@ def add_airport():
 
 @app.route("/view_flight_rating", methods=["GET", "POST"])
 def view_flight_rating():
-    if 'username' not in session:
+    if 'user' not in session:
         return redirect(url_for('stafflogin'))
     if request.method == "POST":
         airline_name = request.form.get("airline_name")
@@ -511,7 +480,7 @@ def flight_rating():
 @app.route("/customers")
 def customers():
     # Redirect to login page if user is not logged in
-    if "username" not in session:
+    if "user" not in session:
         return redirect(url_for("stafflogin"))
 
     with connection.cursor() as cursor:
@@ -523,14 +492,14 @@ def customers():
 
 @app.route("/rate_flight", methods=["GET", "POST"])
 def rate_flight():
-    if 'username' not in session:
+    if 'user' not in session:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         flight_id = request.form.get("flight_id")
         rating = request.form.get("rating")
         comment = request.form.get("comment")
-        email = session["username"]
+        email = session["user"]
         
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO Flight_Rating (flight_id, email, rating, comment) VALUES (%s, %s, %s, %s)", 
@@ -542,10 +511,10 @@ def rate_flight():
     return render_template('rate_flight.html')
 @app.route("/spending")
 def spending():
-    if 'username' not in session:
+    if 'user' not in session:
         return redirect(url_for('login'))
 
-    email = session["username"]
+    email = session["user"]
     with connection.cursor() as cursor:
         cursor.execute("SELECT MONTH(purchase_date) AS Month, YEAR(purchase_date) AS Year, SUM(price) AS Total FROM Ticket WHERE email = %s AND purchase_date > DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) GROUP BY YEAR(purchase_date), MONTH(purchase_date)", (email,))
         spending = cursor.fetchall()
