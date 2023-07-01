@@ -1,0 +1,143 @@
+<html>
+
+<head>
+	<h2> User Information</h2>
+</head>
+<style>
+	table {
+		border-spacing: 3;
+		vertical-align: middle;
+		padding-left: 5;
+	}
+	tr {
+		
+		vertical-align: middle;
+		height: 10px;
+	}
+	td {
+		padding-top: 2;
+		padding-bottom: 2;
+		padding-right: 3;
+		vertical-align: middle;
+	}
+	th {
+		text-align: left;
+		font-size: 18;
+		padding-top: 4;
+		padding-bottom: 4;
+	}
+	h2 {
+		padding-left: 5;
+		vertical-align: middle;
+	}
+	
+	input[type=submit] {
+		padding: 5; 
+		font-size: 15; 
+	}
+</style>
+
+<body>
+	<table>
+		<form action="/customerinfo" method="POST">
+			<th> Personal </th>
+			<tr>
+				<td>
+					<label for="name">
+						Name
+					</label>
+				</td>
+				<td><input type="text" name="name", placeholder="Name" , value={{name}}>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="email">
+						Email
+					</label>
+				</td>
+				<td><input readonly disabled type="email" name="email" value={{email}}>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="phone_number">
+						Phone Number
+					</label>
+				</td>
+				<td><input type="tel" placeholder="XXX-XXX-XXXX" , name="phone_number" value={{phone_number}}>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="date_of_birth"> DOB </label>
+				</td>
+				<td> <input type="date" , name="date_of_birth" , value={{date_of_birth}}></td>
+			</tr>
+			<th> Address </th>
+			<tr>
+				<td>
+					<label for="address_street"> Street </label>
+				</td>
+				<td> <input type="text" , placeholder="street" , name="address_street" , value={{address_street}}></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="address_building_number"> Building No. </label>
+				</td>
+				<td> <input type="number" , max=99999999999, placeholder="building number" , name="address_building_number" ,
+						value={{address_building_number}}></td>
+			</tr>
+			</tr>
+			<tr>
+				<td>
+					<label for="city"> City </label>
+				</td>
+				<td> <input type="text" , placeholder="city" , name="address_city" , value={{address_city}}></td>
+			</tr>
+			</tr>
+			<tr>
+				<td>
+					<label for="address_state"> State </label>
+				</td>
+				<td> <input type="text" , placeholder="state" , name="address_state" , value={{address_state}}></td>
+			</tr>
+			<th> Passport </th>
+			<tr>
+				<td>
+					<label for="passport_number"> Passport Number </label>
+				</td>
+				<td> <input type="text" , placeholder="passport number" , name="passport_number" , value={{passport_number}}></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="passport_expiration"> Expiration Date </label>
+				</td>
+				<td> <input type="date" , name="passport_expiration" , value={{passport_expiration}}></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="passport_country"> Passport Country </label>
+				</td>
+				<td> <input type="text" , placeholder="country" , name="passport_country" , value={{passport_country}}></td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" value=Save style="text-align: center;">
+				</td>
+			</tr>
+				{% if error %}
+				<tr>
+					<td>						
+						<p class="error"><strong>Error:</strong> {{error}}</p>
+					</td>
+				</tr>
+				{% endif %}
+			<tr>
+				<td> <a href="/userhome">Go back</a> </td>
+			</tr>
+
+		</form>
+	</table>
+
+</body>
+
+</html>
