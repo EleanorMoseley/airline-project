@@ -89,7 +89,7 @@ def staffhome():
 
 @app.route('/stafflogin', methods=['GET', 'POST'])
 def stafflogin():
-    if request == 'POST':
+    if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         #password = hashlib.md5(request.form.get("password").encode()).hexdigest()
