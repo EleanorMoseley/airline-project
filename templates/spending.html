@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Spending</h1>
+<table>
+    <tr>
+        <th>Month</th>
+        <th>Year</th>
+        <th>Total</th>
+    </tr>
+    {% for item in spending %}
+    <tr>
+        <td>{{ item['Month'] }}</td>
+        <td>{{ item['Year'] }}</td>
+        <td>{{ item['Total'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

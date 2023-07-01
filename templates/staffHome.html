@@ -1,12 +1,28 @@
-<html>
-    <head>
-        <h1> Welcome xxx</h1>
-    </head>
+<!--
+    View flights
+    Create New Flights 
+    Change Status of flights ->
+    Add Airplane in the system 
+    Add new Airports in the system
+    View flight ratings
+    View Reports
+    (Logout)
+-->
+
+{% extends "base.html" %}
+{% block content %}
     <body>
         <form action="/stafflogin" method="post">
-            <p>All the other functions</p>
-
+            <h1>Staff home</h1>
+            <br><a href="/staff_flights">Staff flight view</a><br> 
+            <br><a href="/add_flight">Add New Flights</a><br>
+            <br><a href="/edit_flight/<int:flight_number">Change Status of Flight</a><br>
+            <br><a href="/add_airplane">Add Airplane</a><br>
+            <br><a href="/add_airport">Add New Airport</a><br>
+            <br><a href="/view_flight_rating">View Flight Rating</a><br>
+            <br><a href="/view_reports">View Reports</a><br>
         </form>
+        <br>
         <a href="/logout">Logout</a>
-    </body>
-</html>
+
+{% endblock %}

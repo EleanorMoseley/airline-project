@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Rate Flight</h1>
+<form method="POST">
+    <label for="flight_id">Flight ID:</label><br>
+    <input type="text" id="flight_id" name="flight_id"><br>
+    <label for="rating">Rating (1-5):</label><br>
+    <input type="number" id="rating" name="rating" min="1" max="5"><br>
+    <label for="comment">Comment:</label><br>
+    <textarea id="comment" name="comment"></textarea><br>
+    <input type="submit" value="Rate Flight">
+</form>
+{% endblock %}

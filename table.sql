@@ -26,6 +26,7 @@ CREATE TABLE Flight (
     arrival_date_time TIMESTAMP,
     base_price DECIMAL(8, 2),
     airplane_id INT,
+    status VARCHAR(100),
     PRIMARY KEY (flight_number, departure_date_time, airline_name),
     FOREIGN KEY (airline_name) REFERENCES Airline(name),
     FOREIGN KEY (departure_airport) REFERENCES Airport(name),

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add Flight</h1>
+<form method="POST">
+    <label for="flight_number">Flight Number:</label><br>
+    <input type="text" id="flight_number" name="flight_number"><br>
+    <label for="departure_airport">Departure Airport:</label><br>
+    <input type="text" id="departure_airport" name="departure_airport"><br>
+    <label for="arrival_airport">Arrival Airport:</label><br>
+    <input type="text" id="arrival_airport" name="arrival_airport"><br>
+    <label for="departure_time">Departure Time:</label><br>
+    <input type="text" id="departure_date_time" name="departure_date_time"><br>
+    <label for="arrival_time">Arrival Time:</label><br>
+    <input type="text" id="arrival_date_time" name="arrival_date_time"><br>\
+    
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" required>
+    <label for="price">Price:</label><br>
+    <input type="text" id="base price" name="base price"><br>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
