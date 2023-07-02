@@ -1,22 +1,76 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Add Flight</h1>
+
+<style>
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon>i {
+        position: absolute;
+        display: block;
+        transform: translate(0, -50%);
+        top: 50%;
+        pointer-events: none;
+        width: 25px;
+        text-align: center;
+        font-style: normal;
+    }
+
+    .input-icon>input {
+        padding-left: 25px;
+        padding-right: 0;
+    }
+
+    .input-icon-right>i {
+        right: 0;
+    }
+
+    .input-icon-right>input {
+        padding-left: 0;
+        padding-right: 25px;
+        text-align: right;
+    }
+    .input {
+        padding-top: 7px;
+        padding-bottom: 3px;
+    }
+</style>
+
 <form method="POST">
-    <label for="flight_number">Flight Number:</label><br>
-    <input type="text" id="flight_number" name="flight_number"><br>
-    <label for="departure_airport">Departure Airport:</label><br>
-    <input type="text" id="departure_airport" name="departure_airport"><br>
-    <label for="arrival_airport">Arrival Airport:</label><br>
-    <input type="text" id="arrival_airport" name="arrival_airport"><br>
-    <label for="departure_time">Departure Time:</label><br>
-    <input type="text" id="departure_date_time" name="departure_date_time"><br>
-    <label for="arrival_time">Arrival Time:</label><br>
-    <input type="text" id="arrival_date_time" name="arrival_date_time"><br>\
-    
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" required>
-    <label for="price">Price:</label><br>
-    <input type="text" id="base price" name="base price"><br>
-    <input type="submit" value="Submit">
+
+    <div class="container">
+        <div class="form-group">
+            <div class = 'input'> 
+                <label for="flight_number">Flight Number:</label>
+                <input type="text" id="flight_number" required name="flight_number"></div>
+            <div class = 'input'>
+                <label for="departure_airport">Departure Airport:</label>
+                <input type="text" id="departure_airport" required name="departure_airport">   </div> 
+            <div class = 'input'>
+                <label for="arrival_airport">Arrival Airport:</label>
+                <input type="text" id="arrival_airport" required name="arrival_airport"></div>
+            <div class = 'input'> 
+                <label for="departure_time">Departure Time:</label>
+                <input type="datetime-local" id="departure_date_time" required name="departure_date_time"></div>
+           <div class = 'input'> 
+                <label for="arrival_time">Arrival Time:</label>
+                <input type="datetime-local" id="arrival_date_time" name="arrival_date_time"></div>
+            <div class = 'input'>
+                <label for="status">Status:</label>
+                <select name="status" required>
+                    <option value="on_time">On Time</option>
+                    <option value="delayed">Delayed</option>
+                    <option value="early">Early</option>
+                </select></div>
+            <div class = 'input'> 
+                <label for="price">Price:</label>
+                <div class="input-icon">
+                    <input type="text" name="price" class="form-control" placeholder="0.00">
+                    <i>$</i>
+                </div> </div>
+        </div>
+        <input type="submit" value="Submit">
 </form>
 {% endblock %}
