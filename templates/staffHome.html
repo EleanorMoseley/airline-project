@@ -16,11 +16,22 @@
             <h1>Staff Home</h1>
             <br><a href="/staff_flights">Staff flight view</a><br> 
             <br><a href="/add_flight">Add New Flights</a><br>
-            <br><a href="/edit_flight/<int:flight_number">Change Status of Flight</a><br>
+            
             <br><a href="/add_airplane">Add Airplane</a><br>
             <br><a href="/add_airport">Add New Airport</a><br>
             <br><a href="/view_flight_rating">View Flight Rating</a><br>
             <br><a href="/view_reports">View Reports</a><br>
         </form>
+        <h2>Flight Status</h2>
+        <form action="/status" method="post">
+            
+            Airline name: <input type="text" id="airline" name="airline"><br>
+          
+            Flight number: <input type="text" id="flight_number" name="flight_number"><br>
+      
+           Date:  <input type="date" id="date" name="date"><br>
+            <input type="submit" value="Check Status">
+        </form>
+    
         <br>
 {% endblock %}

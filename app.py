@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port = 8889,
+                        
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -409,11 +409,16 @@ def cancel_booking(ticket_id):
         if ticket is None:
             return render_template("error.html", message="No such ticket.")
 
+        # Delete the purchase associated with the ticket
+        cursor.execute("DELETE FROM Purchase WHERE ticket_id = %s", [ticket_id])
         # Delete the ticket
         cursor.execute("DELETE FROM Ticket WHERE id = %s", [ticket_id])
 
         # Commit the transaction
-        connection.commit
+        connection.commit()
+
+    return redirect(url_for("my_tickets"))
+
 
 
 ## STAFF FLIGHTS
