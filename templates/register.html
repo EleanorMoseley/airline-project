@@ -14,10 +14,10 @@
 	</select>
 	<input type="text" name="username" id="username" placeholder="Username (Staff only)" style="display: none;"/>
 	<input type="password" name="password" placeholder="Password" required style="text-align: center;"/>
-	<input type="email" name="email" placeholder="Email" required style="text-align: center"/>
+	<input type="email" name="email" required id = 'email' placeholder="Email"  style="text-align: center"/>
 	<input type="text" name="first_name" id="first_name" placeholder="First Name (Staff only)" style="display: none;"/>
 	<input type="text" name="last_name" id="last_name" placeholder="Last Name (Staff only)" style="display: none;"/>
-	<input required type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
+	<input type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
     <label for = 'date_of_birth_staff', style="display: none;"> Date of Birth </label> 
 	<input type="date" name="date_of_birth_staff" id="date_of_birth_staff" placeholder="DOB(Staff only)" style="display: none;"/>
 
@@ -39,6 +39,7 @@
 	<label for = 'date_of_birth', id ='dob label', style> Date of Birth </label>
 	<input type="date" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth" style="display: block;"/>
 	<input type="submit" value="Register" style="text-align: center;"/>
+	<script>toggleRole('role');</script>
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>
 	{% endif %}
@@ -68,13 +69,16 @@
         document.getElementById('date_of_birth_staff').style.display = isCustomer ? 'none' : 'block';
 		document.getElementById('exp label').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('dob label').style.display = isCustomer ? 'block' : 'none';
-		document.getElementById('airline_name').attributes.required = isCustomer ? 'false' : 'true';
+		document.getElementById('airline_name').required = isCustomer ? 'false' : 'true';
+		document.getElementById('username').required = isCustomer ? 'false' : 'true';
+		document.getElementById('email').required = isCustomer ? 'true' : 'false';
+
 
 	}
 
 	function addPhoneNumber() {
 		var div = document.createElement('div');
-		div.innerHTML = '<input type="text" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>';
+		div.innerHTML = '<input type="tel" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>';
 		document.getElementById('phone_numbers_staff').appendChild(div);
 	}
 
@@ -83,6 +87,7 @@
 		if (phoneNumbersDiv.children.length > 1) {
 			phoneNumbersDiv.removeChild(phoneNumbersDiv.lastChild);
 		}
+
 	}
 </script>
 </body>

@@ -49,7 +49,9 @@ def register():
         with connection.cursor() as cursor:
         # customer 
             if role == "customer":
+                print ("before execute")
                 cursor.execute('Select * FROM customer WHERE email = \'%s\''% request.form.get('email'))
+                print ("after execute")
                 if (cursor.fetchone() != None):
                     return render_template('register.html', error = "Email Already In Use")
                 customeratt = {
@@ -68,13 +70,14 @@ def register():
                 }
                 for key in customeratt : 
                     # val = request.form.get(key)
-                    if (key == 'password'):
-                        customeratt[key] = password
-                        continue
                     customeratt[key] = str(request.form.get(key))
+                    print(customeratt[key])
                     if (len(customeratt[key]) <1 or customeratt[key] == 'None'):
                         customeratt[key] = 'NULL'
-                    elif (key != 'date_of_birth' or "building_number" or 'passport_expiration'):
+                        continue
+                    if (key == 'password'):
+                        customeratt[key] = password
+                    if (key != 'date_of_birth' or "building_number" or 'passport_expiration'):
                         customeratt[key] = "'" + customeratt[key] + "'"
                
                 print("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s)" % ', '.join(customeratt.values()))
@@ -84,6 +87,9 @@ def register():
                 cursor.execute('Select * from AirlineStaff WHERE username = \'%s\''% request.form.get('username'))
                 if (cursor.fetchone() != None):
                     return render_template('register.html', error = "Username Already In Use")
+                cursor.execute('Select * from Airline WHERE name = \'%s\''% request.form.get('airline_name'))
+                if (cursor.fetchone() == None):
+                    return render_template('register.html', error = "Please Enter Valid Airline")
                 staff = {
                     'username' : '',
                     'password' : '',
@@ -113,7 +119,7 @@ def register():
                 cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
 
                 for phone_number in phone_numbers:
-                    print("INSERT INTO StaffPhone (username, phone_number) VALUES (\'%s\', \'%s\')"% (staff['username'], phone_number))
+                    print("INSERT INTO StaffPhone (username, phone_number) VALUES (%s, \'%s\')"% (staff['username'], phone_number))
                     cursor.execute(
                         "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, \'%s\')"% (staff['username'], phone_number))
             connection.commit()
