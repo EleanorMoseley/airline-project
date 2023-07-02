@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from datetime import date
+from datetime import datetime, timedelta
 import pymysql.cursors
 import hashlib
 
@@ -231,6 +232,37 @@ def view_report():
 
 
 ##  CUSTOMER INFO
+@app.route("/track_spending", methods=["GET", "POST"])
+def track_spending():
+    # Check if the user is logged in and is a customer
+    if "user" not in session or session["role"] != "customer":
+        return redirect(url_for("login"))
+
+    def get_default_date_range():
+        today = datetime.today()
+        start_date = today - timedelta(days=30*6)
+        end_date = today
+        return start_date, end_date
+
+    if request.method == "POST":
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+    else:
+        start_date, end_date = get_default_date_range()
+
+    with connection.cursor() as cursor:
+        # Total amount of money spent
+        cursor.execute("SELECT SUM(sold_price) FROM Purchase WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s", (session["user"]["email"], start_date, end_date))
+        result = cursor.fetchone()
+        print(result)
+        total_spent = result['SUM(sold_price)'] if result else 0
+
+        # Month-wise money spent
+        cursor.execute("SELECT MONTH(purchase_date) as month, SUM(sold_price) as total FROM Purchase WHERE customer_email = %s AND purchase_date BETWEEN %s AND %s GROUP BY MONTH(purchase_date)", (session["user"]["email"], start_date, end_date))
+        month_wise_spending = cursor.fetchall()
+
+    return render_template("track_spending.html", total_spent=total_spent, month_wise_spending=month_wise_spending)
+
 @app.route("/customerinfo", methods = ["GET", "POST"])
 def customerinfo():
     updatedict = {'name': '',
