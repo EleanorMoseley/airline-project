@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>View Report</h1>
+    <form action="/view_report" method="post">
+        Start date: <input type="date" id="start_date" name="start_date"><br>
+        End date: <input type="date" id="end_date" name="end_date"><br>
+        <input type="submit" value="Generate Report">
+    </form>
+
+    <h2>Total Tickets Sold: {{ total_tickets }}</h2>
+    
+    <h2>Month-wise Tickets Sold:</h2>
+    {% if month_wise_tickets %}
+        <table>
+            <tr>
+                <th>Month</th>
+                <th>Tickets Sold</th>
+            </tr>
+            {% for ticket in month_wise_tickets %}
+            <tr>
+                <td>{{ ticket.month }}</td>
+                <td>{{ ticket.count }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No tickets sold in the selected date range.</p>
+    {% endif %}
+{% endblock %}

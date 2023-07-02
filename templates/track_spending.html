@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Spending Overview</h1>
+
+    <form action="/track_spending" method="post">
+        Start date: <input type="date" name="start_date"><br>
+        End date: <input type="date" name="end_date"><br>
+        <input type="submit" value="Update">
+    </form>
+
+    <h2>Total spent: ${{ total_spent }}</h2>
+
+    <h2>Month-wise spending:</h2>
+    <table>
+        <tr>
+            <th>Month</th>
+            <th>Spent</th>
+        </tr>
+        {% for spending in month_wise_spending %}
+        <tr>
+            <td>{{ spending["month"] }}</td>
+            <td>${{ spending["total"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
