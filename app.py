@@ -46,6 +46,7 @@ def register():
         role = request.form.get("role")
         password = hashlib.md5(request.form.get("password").encode()).hexdigest()
         with connection.cursor() as cursor:
+        # customer 
             if role == "customer":
                 cursor.execute('Select * FROM customer WHERE email = \'%s\''% request.form.get('email'))
                 if (cursor.fetchone() != None):
@@ -77,6 +78,7 @@ def register():
                
                 print("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s)" % ', '.join(customeratt.values()))
                 cursor.execute("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES ( % s)" % ', '.join(customeratt.values()))
+            # staff 
             elif role == "staff":
                 cursor.execute('Select * from AirlineStaff WHERE username = \'%s\''% request.form.get('username'))
                 if (cursor.fetchone() != None):
@@ -92,7 +94,7 @@ def register():
 
                 for key in staff :
                     if (key == 'password'):
-                        customeratt[key] = password
+                        staff[key] = password
                         continue 
                     staff[key] = str(request.form.get(key))
                     if (len(staff[key]) <1 or staff[key] == 'None'):
