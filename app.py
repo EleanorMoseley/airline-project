@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
+from datetime import date
 import pymysql.cursors
 import hashlib
 
@@ -190,6 +191,37 @@ def userhome():
 @app.route("/staffhome", methods=['GET', 'POST'])
 def staffhome():
     return render_template('staffHome.html')
+
+@app.route("/view_report", methods=["GET", "POST"])
+def view_report():
+    # Check if the user is logged in and is a staff
+    if "user" not in session or session["role"] != "staff":
+        return redirect(url_for("login"))
+
+    def get_default_date_range():
+        start_date = date.today().replace(day=1)
+        end_date = date.today()
+
+        return start_date, end_date
+
+    if request.method == "POST":
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+    else:
+        start_date, end_date = get_default_date_range()
+
+    with connection.cursor() as cursor:
+        # Total amount of tickets sold
+        cursor.execute("SELECT COUNT(*) FROM Purchase WHERE purchase_date BETWEEN %s AND %s", (start_date, end_date))
+        result = cursor.fetchone()
+        print(result)
+        total_tickets = result["COUNT(*)"] if result else 0
+
+        # Month-wise tickets sold
+        cursor.execute("SELECT MONTH(purchase_date) as month, COUNT(*) as count FROM Purchase WHERE purchase_date BETWEEN %s AND %s GROUP BY MONTH(purchase_date)", (start_date, end_date))
+        month_wise_tickets = cursor.fetchall()
+
+    return render_template("view_report.html", total_tickets=total_tickets, month_wise_tickets=month_wise_tickets)
 
 
 ##  CUSTOMER INFO
