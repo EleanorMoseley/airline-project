@@ -101,6 +101,7 @@ def register():
                         staff[key] = "'" + staff[key] + "'"
                
                 print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
+                #cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
                 cursor.execute(
     "INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", 
     (staff['username'], staff['password'], staff['first_name'], staff['last_name'], staff['date_of_birth'], staff['airline_name']))
