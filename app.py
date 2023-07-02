@@ -214,7 +214,7 @@ def stafflogin():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        #password = hashlib.md5(request.form.get("password").encode()).hexdigest()
+        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
         cursor = connection.cursor()
         query = 'SELECT username,password FROM AirlineStaff WHERE username = %s and password = %s'
         cursor.execute(query, (username, password))
@@ -248,8 +248,7 @@ def status():
 def register():
     if request.method == "POST":
         role = request.form.get("role")
-        password = hashlib.md5(request.form.get(
-            "password").encode()).hexdigest()
+        password = hashlib.md5(request.form.get("password").encode()).hexdigest()
         with connection.cursor() as cursor:
             if role == "customer":
                 cursor.execute('Select * FROM customer WHERE email = \'%s\''% request.form.get('email'))
@@ -271,12 +270,15 @@ def register():
                 }
                 for key in customeratt : 
                     # val = request.form.get(key)
+                    if (key == 'password'):
+                        customeratt[key] = password
+                        continue
                     customeratt[key] = str(request.form.get(key))
                     if (len(customeratt[key]) <1 or customeratt[key] == 'None'):
                         customeratt[key] = 'NULL'
                     elif (key != 'date_of_birth' or "building_number" or 'passport_expiration'):
                         customeratt[key] = "'" + customeratt[key] + "'"
-
+               
                 print("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES (%s)" % ', '.join(customeratt.values()))
                 cursor.execute("INSERT INTO Customer (name, email, password, address_building_number, address_street, address_city, address_state, phone_number, passport_number, passport_expiration, passport_country, date_of_birth) VALUES ( % s)" % ', '.join(customeratt.values()))
             elif role == "staff":
@@ -292,7 +294,10 @@ def register():
                     'airline_name': ''
                 }
 
-                for key in staff : 
+                for key in staff :
+                    if (key == 'password'):
+                        customeratt[key] = password
+                        continue 
                     staff[key] = str(request.form.get(key))
                     if (len(staff[key]) <1 or staff[key] == 'None'):
                         staff[key] = 'NULL'
