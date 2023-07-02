@@ -105,10 +105,11 @@ def register():
                 print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
                 cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
                 
-                # phone_numbers = request.form.getlist("phone_number_staff[]")
-                # for phone_number in phone_numbers:
-                #     cursor.execute(
-                #         "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, %s)", (staff['username'], phone_number))
+                phone_numbers = request.form.getlist("phone_number_staff[]")
+                for phone_number in phone_numbers:
+                    print("INSERT INTO StaffPhone (username, phone_number) VALUES (\'%s\', \'%s\')"% (staff['username'], phone_number))
+                    cursor.execute(
+                        "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, \'%s\')"% (staff['username'], phone_number))
             connection.commit()
             cursor.close()
         return redirect(url_for("home"))

@@ -17,7 +17,7 @@
 	<input type="email" name="email" placeholder="Email" required style="text-align: center"/>
 	<input type="text" name="first_name" id="first_name" placeholder="First Name (Staff only)" style="display: none;"/>
 	<input type="text" name="last_name" id="last_name" placeholder="Last Name (Staff only)" style="display: none;"/>
-	<input type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
+	<input required type="text" name="airline_name" id="airline_name" placeholder="Airline Name (Staff only)" style="display: none;"/>
     <label for = 'date_of_birth_staff', style="display: none;"> Date of Birth </label> 
 	<input type="date" name="date_of_birth_staff" id="date_of_birth_staff" placeholder="DOB(Staff only)" style="display: none;"/>
 
@@ -68,6 +68,7 @@
         document.getElementById('date_of_birth_staff').style.display = isCustomer ? 'none' : 'block';
 		document.getElementById('exp label').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('dob label').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('airline_name').attributes.required = isCustomer ? 'false' : 'true';
 
 	}
 
