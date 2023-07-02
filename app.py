@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port = 8889,
+                 
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -92,16 +92,19 @@ def register():
 
                 for key in staff :
                     if (key == 'password'):
-                        customeratt[key] = password
+                        staff[key] = password
                         continue 
                     staff[key] = str(request.form.get(key))
                     if (len(staff[key]) <1 or staff[key] == 'None'):
                         staff[key] = 'NULL'
                     elif (key != 'date_of_birth'):
                         staff[key] = "'" + staff[key] + "'"
-
+               
                 print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
-                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
+                cursor.execute(
+    "INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s, %s, %s, %s, %s, %s)", 
+    (staff['username'], staff['password'], staff['first_name'], staff['last_name'], staff['date_of_birth'], staff['airline_name']))
+
                 # phone_numbers = request.form.getlist("phone_number_staff[]")
                 # for phone_number in phone_numbers:
                 #     cursor.execute(
