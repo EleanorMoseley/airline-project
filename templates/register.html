@@ -22,7 +22,7 @@
 	<input type="date" name="date_of_birth_staff" id="date_of_birth_staff" placeholder="DOB(Staff only)" style="display: none;"/>
 
 	<div id="phone_numbers_staff" style="display: none;">
-		<input type="text" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>
+		<input type="tel" name="phone_number_staff[]" placeholder="Phone Number (Staff only)"/>
 	    <button type="button" onclick="addPhoneNumber()">Add Phone Number</button>
 	    <button type="button" onclick="removePhoneNumber()" style="display: none;" id="remove_phone_number">Remove Phone Number</button>
     </div>
@@ -33,10 +33,10 @@
 	<input type="text" name="state" id="state" placeholder="State (Customer only)" style="display: block;"/>
 	<input type="tel" name="phone_number" id="phone_number" placeholder="Phone Number (Customer only)" style="display: block;"/>
 	<input type="text" name="passport_number" id="passport_number" placeholder="Passport Number (Customer only)" style="display: block;"/>
-	<label for = 'passport_expiration'> Passport Expir. Date </label>
+	<label for = 'passport_expiration', id = 'exp label'> Passport Expir. Date </label>
 	<input type="date" name="passport_expiration" id="passport_expiration" placeholder="Passport Expiration (Customer only)" style="display: block;"/>
 	<input type="text" name="passport_country" id="passport_country" placeholder="Passport Country (Customer only)" style="display: block;"/>
-	<label for = 'date_of_birth'> Date of Birth </label>
+	<label for = 'date_of_birth', id ='dob label', style> Date of Birth </label>
 	<input type="date" name="date_of_birth" id="date_of_birth" placeholder="Date of Birth" style="display: block;"/>
 	<input type="submit" value="Register" style="text-align: center;"/>
 	{% if error %}
@@ -66,6 +66,9 @@
 		document.getElementById('passport_country').style.display = isCustomer ? 'block' : 'none';
 		document.getElementById('date_of_birth').style.display = isCustomer ? 'block' : 'none';
         document.getElementById('date_of_birth_staff').style.display = isCustomer ? 'none' : 'block';
+		document.getElementById('exp label').style.display = isCustomer ? 'block' : 'none';
+		document.getElementById('dob label').style.display = isCustomer ? 'block' : 'none';
+
 	}
 
 	function addPhoneNumber() {
