@@ -103,9 +103,14 @@ def register():
                         staff[key] = "'" + staff[key] + "'"
                
                 print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
-                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
                 
                 phone_numbers = request.form.getlist("phone_number_staff[]")
+                
+                if (len(set(phone_numbers)) != len(phone_numbers)):
+                    return render_template('register.html', error = "Please submit each phone number only once")
+    
+                cursor.execute("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
+
                 for phone_number in phone_numbers:
                     print("INSERT INTO StaffPhone (username, phone_number) VALUES (\'%s\', \'%s\')"% (staff['username'], phone_number))
                     cursor.execute(
