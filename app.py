@@ -24,10 +24,6 @@ def home():
 # SEARCH 
 @app.route("/search", methods=["POST"])
 def search():
-    # Check if the user is logged in and is a customer
-    if "user" not in session or session["role"] != "customer":
-        flash('Please log in as a customer to access this page.')
-        return redirect(url_for("login"))
 
     source = request.form.get("source")
     destination = request.form.get("destination")
