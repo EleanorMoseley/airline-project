@@ -25,12 +25,28 @@ def home():
 @app.route("/search", methods=["POST"])
 def search():
 
-    source = request.form.get("source")
-    destination = request.form.get("destination")
-    date = request.form.get("date")
+    string = [] 
+    dad = ['departure_airport', 'arrival_airport', 'departure_date_time']
+
+    for key in dad:
+        var = request.form.get(key)
+        print(var)
+        if (len(var) < 1):
+            continue
+        if (key == 'departure_date_time'):
+            string.append("destination_date_time >= '%s' and destination_date_time < dateadd(day, 1, '%s')" % var, var)
+        else:
+            string.append('%s = %s' % key, var)
+
+        
+
+    queryString = "SELECT * FROM Flight" 
+    if (len(string)>0):
+        queryString += " WHERE " + " ,".join(string)
+
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date_time >= %s", (source, destination, date))
+        cursor.execute(queryString)
         Flight = cursor.fetchall()
 
     return render_template("search_results.html", flights=Flight)
