@@ -562,17 +562,33 @@ def add_flight():
 
     with connection.cursor() as cursor:
         cursor.execute("Select * From airlinestaff where username = '%s'" % session['user'])
+        flightdict = {
+            'flight_number' : '',
+            'departure_date_time' : '',
+            'arrival_date_time' : '',
+            'departure_airport': '',
+            'arrival_airport' : '',
+            'status' : '',
+            'airplane' : '',
+            'price' : ''
+        }
+        
         staff = cursor.fetchone()
         if request.method == "POST":
-            flight_number = request.form.get("flight_number")
-            departure_date_time = request.form.get("departure_date_time")
-            arrival_date_time = request.form.get("arrival_date_time")
-            status = request.form.get("status")
-            airplane = request.form.get("airplane")
-            price = request.form.get('price')
+            for key in flightdict:
+                val = request.form.get(key)
+                if val == None:
+                    flightdict[key] = 'NULL'
+                    continue
+                elif (key == 'airplane' or 'status'):
+                    flightdict[key] = "'" + val + "'"
+                else:
+                    flightdict[key] = val
 
-            cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time,status, airplane_id, price) VALUES (%s, %s, %s, %s, %s, %s)", 
-                           (staff['airline'], flight_number, departure_date_time, arrival_date_time, status, airplane, price))
+            # print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, price) VALUES ('%s', %s)" % 
+            #                (staff['airline_name'], ', '.join(flightdict.values())))
+            cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
+                           (staff['airline_name'], ', '.join(flightdict.values())))
 
             # Commit the transaction
             connection.commit()
