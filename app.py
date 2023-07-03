@@ -569,8 +569,8 @@ def add_flight():
             'departure_airport': '',
             'arrival_airport' : '',
             'status' : '',
-            'airplane' : '',
-            'price' : ''
+            'airplane_id' : '',
+            'base_price' : ''
         }
         
         staff = cursor.fetchone()
@@ -580,13 +580,16 @@ def add_flight():
                 if val == None:
                     flightdict[key] = 'NULL'
                     continue
-                elif (key == 'airplane' or 'status'):
+                elif (key == 'airplane' or 'status' or 'departure_airport' or 'arrival_airport'):
                     flightdict[key] = "'" + val + "'"
+                elif (key == 'base_price'):
+                    flightdict[key] = "%.2f" % val
                 else:
                     flightdict[key] = val
+            print (flightdict)
 
-            # print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, price) VALUES ('%s', %s)" % 
-            #                (staff['airline_name'], ', '.join(flightdict.values())))
+            print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
+                           (staff['airline_name'], ', '.join(flightdict.values())))
             cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
                            (staff['airline_name'], ', '.join(flightdict.values())))
 
@@ -599,7 +602,9 @@ def add_flight():
         # For GET requests, render the form
         cursor.execute("SELECT * FROM airplane WHERE airline_name = '%s'" % staff["airline_name"] )
         planes = cursor.fetchall()
-        return render_template("add_flights.html", airplanes = planes)
+        cursor.execute("SELECT * FROM airport")
+        airports = cursor.fetchall()
+        return render_template("add_flights.html", airplanes = planes, airports=airports)
 
 ## ADD AIRPLANES
 @app.route("/add_airplane", methods=["GET", "POST"])
