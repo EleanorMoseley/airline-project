@@ -44,7 +44,7 @@
         <div class="form-group">
             <div class = 'input'> 
                 <label for="flight_number">Flight Number:</label>
-                <input type="text" id="flight_number" required name="flight_number"></div>
+                <input type="text" id="flight_number"  name="flight_number" pattern="\d*" maxlength = "11" required></div>
             <div class = 'input'>
                 <label for="departure_airport">Departure Airport:</label>
                 <input type="text" id="departure_airport" required name="departure_airport">   </div> 
@@ -52,25 +52,38 @@
                 <label for="arrival_airport">Arrival Airport:</label>
                 <input type="text" id="arrival_airport" required name="arrival_airport"></div>
             <div class = 'input'> 
-                <label for="departure_time">Departure Time:</label>
+                <label for="departure_date_time">Departure Time:</label>
                 <input type="datetime-local" id="departure_date_time" required name="departure_date_time"></div>
            <div class = 'input'> 
-                <label for="arrival_time">Arrival Time:</label>
+                <label for="arrival_date_time">Arrival Time:</label>
                 <input type="datetime-local" id="arrival_date_time" name="arrival_date_time"></div>
             <div class = 'input'>
+                <label for = "airplane"> Airplane ID:</label>
+                <select id="airplane" required>
+                    <option value = none selected hidden disabled> -- </option>
+                    {% for planes in airplanes %}
+                    <option value = {{planes.id}}> {{planes.id}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class = 'input'>
                 <label for="status">Status:</label>
-                <select name="status" required>
+                <select id="status" required>
                     <option value="on_time">On Time</option>
                     <option value="delayed">Delayed</option>
                     <option value="early">Early</option>
                 </select></div>
-            <div class = 'input'> 
-                <label for="price">Price:</label>
+            <div class = "input"> 
+                <label for="price">Base Price:</label>
                 <div class="input-icon">
-                    <input type="text" name="price" class="form-control" placeholder="0.00">
+                    <input type="number" id="price" 
+                     placeholder="0.00">
                     <i>$</i>
-                </div> </div>
+                </div> 
+            </div>
         </div>
         <input type="submit" value="Submit">
 </form>
+
+
 {% endblock %}

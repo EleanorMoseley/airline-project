@@ -561,21 +561,29 @@ def add_flight():
         return redirect(url_for("stafflogin"))
 
     with connection.cursor() as cursor:
+        cursor.execute("Select * From airlinestaff where username = '%s'" % session['user'])
+        staff = cursor.fetchone()
         if request.method == "POST":
             flight_number = request.form.get("flight_number")
             departure_date_time = request.form.get("departure_date_time")
             arrival_date_time = request.form.get("arrival_date_time")
             status = request.form.get("status")
+            airplane = request.form.get("airplane")
+            price = request.form.get('price')
 
-            cursor.execute("INSERT INTO Flight (flight_number, departure_date_time, arrival_date_time,status) VALUES (%s, %s, %s, %s)", (flight_number, departure_date_time, arrival_date_time, status ))
+            cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time,status, airplane_id, price) VALUES (%s, %s, %s, %s, %s, %s)", 
+                           (staff['airline'], flight_number, departure_date_time, arrival_date_time, status, airplane, price))
 
             # Commit the transaction
             connection.commit()
 
             return redirect(url_for("staff_flights"))
 
+        
         # For GET requests, render the form
-        return render_template("add_flights.html")
+        cursor.execute("SELECT * FROM airplane WHERE airline_name = '%s'" % staff["airline_name"] )
+        planes = cursor.fetchall()
+        return render_template("add_flights.html", airplanes = planes)
 
 ## ADD AIRPLANES
 @app.route("/add_airplane", methods=["GET", "POST"])
@@ -584,8 +592,12 @@ def add_airplane():
         return redirect(url_for('stafflogin'))
 
     if request.method == 'POST':
+        print ("SELECT * FROM AirlineStaff WHERE username = '%s'" % session['user'])
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM AirlineStaff WHERE username = '%s'" % session['user'])
+            staff = cursor.fetchone()
         airplane_id = request.form.get("airplane_id")
-        airline_name = session["user"]
+        airline_name = staff['airline_name']
         seats = request.form.get("seats")
         
         with connection.cursor() as cursor:
