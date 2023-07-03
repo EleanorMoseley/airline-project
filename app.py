@@ -578,6 +578,8 @@ def add_flight():
 
     with connection.cursor() as cursor:
         cursor.execute("Select * From airlinestaff where username = '%s'" % session['user'])
+        staff = cursor.fetchone()
+
         flightdict = {
             'flight_number' : '',
             'departure_date_time' : '',
@@ -589,7 +591,6 @@ def add_flight():
             'base_price' : ''
         }
         
-        staff = cursor.fetchone()
         if request.method == "POST":
             for key in flightdict:
                 val = request.form.get(key)
@@ -604,6 +605,11 @@ def add_flight():
                     flightdict[key] = val
             print (flightdict)
 
+            cursor.execute("select * from flights where departure_date_time = %s and airline_name = %s and flight_number = %s " % flightdict['departure_date_time'], staff['airline_name'], flightdict['flight_number'])
+            match = cursor.fetchall()
+            if (match):
+                return render_template("add_flights.html", error = "Already Registered")
+
             print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
                            (staff['airline_name'], ', '.join(flightdict.values())))
             cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
@@ -613,7 +619,6 @@ def add_flight():
             connection.commit()
 
             return redirect(url_for("staff_flights"))
-
         
         # For GET requests, render the form
         cursor.execute("SELECT * FROM airplane WHERE airline_name = '%s'" % staff["airline_name"] )

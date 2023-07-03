@@ -94,6 +94,11 @@
                     <i>$</i>
                 </div> 
             </div>
+            {% if error %}
+            <di>
+                <p> {{error}} </p>
+            </di>
+            {% endif %}
         </div>
         <input type="submit" value="Submit">
 </form>
