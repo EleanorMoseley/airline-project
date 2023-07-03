@@ -1,20 +1,123 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Edit Flight</h1>
-<form method="POST">
-    <label for="departure_airport">Departure Airport:</label><br>
-    <input type="text" id="departure_airport" name="departure_airport" value="{{ flight.departure_airport }}"><br>
-    <label for="arrival_airport">Arrival Airport:</label><br>
-    <input type="text" id="arrival_airport" name="arrival_airport" value="{{ flight.arrival_airport }}"><br>
-    <label for="departure_time">Departure Time:</label><br>
-    <input type="text" id="departure_time" name="departure_date_time" value="{{ flight.departure_date_time }}"><br>
-    <label for="arrival_time">Arrival Time:</label><br>
-    <input type="text" id="arrival_time" name="arrival_date_time" value="{{ flight.arrival_date_time }}"><br>
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" value="{{ flight.status }}" required>
+<h1>Add Flight</h1>
 
-    <label for="price">Price:</label><br>
-    <input type="text" id="price" name="base price" value="{{ flight.base_price }}"><br>
-    <input type="submit" value="Update">
+
+<style>
+    .input-icon {
+        position: relative;
+    }
+
+    .input-icon>i {
+        position: absolute;
+        display: block;
+        transform: translate(0, -50%);
+        top: 50%;
+        pointer-events: none;
+        width: 25px;
+        text-align: center;
+        font-style: normal;
+    }
+
+    .input-icon>input {
+        padding-left: 25px;
+        padding-right: 0;
+    }
+
+    .input-icon-right>i {
+        right: 0;
+    }
+
+    .input-icon-right>input {
+        padding-left: 0;
+        padding-right: 25px;
+        text-align: right;
+    }
+    .input {
+        padding-top: 7px;
+        padding-bottom: 3px;
+    }
+</style>
+
+<form method="POST">
+
+    <div class="container">
+        <div class="form-group">
+            <div class = 'input'> 
+                <label for="flight_number">Flight Number:</label>
+                <input type="text" id="flight_number" name="flight_number" value = {{flight.flight_number}} pattern="\d*" maxlength = "11" required></div>
+            <div class = 'input'>
+                <label for="departure_airport">Departure Airport:</label>
+                <select class = "dropdown-menu" id="departure_airport" required name="departure_airport">   
+                    <option value = {{flight.departure_airport}} selected> {{flight.departure_airport}} {{flight.departure_city}}</option>
+                        {% for ports in airports %}
+                            {% if ports.name != flight.departure_airport %}
+                                <option value = {{ports.name}}> {{ports.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                </select>
+            </div> 
+            <div class = 'input'>
+                <label for="arrival_airport">Arrival Airport:</label>
+                <select class = "dropdown-menu" id="arrival_airport" required name="arrival_airport">   
+                    <option value ={{flight.arrival_airport}} > {{flight.arrival_airport}} </option>
+                    {% for ports in airports %}
+                        {% if ports.name != flight.arrival_airport %}
+                            <option value = {{ports.name}}> {{ports.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+             <div class = 'input'> 
+                <label for="departure_date_time">Departure Time:</label>
+                <input required type="datetime-local" id="departure_date_time" value ={{flight.departure_date_time}} name="departure_date_time"></div>
+           <div class = 'input'> 
+                <label for="arrival_date_time">Arrival Time:</label>
+                <input required type="datetime-local" id="arrival_date_time" value ={{flight.arrival_date_time}} name="arrival_date_time"></div>
+            <div class = 'input'>
+                <label for = "airplane_id"> Airplane ID:</label>
+                <select id="airplane_id" name = 'airplane_id' required>
+                    <option value = {{flight.airplane_id}} > {{flight.airplane_id}} </option>
+                    {% for planes in airplanes %}
+                    {% if planes != flight.airplane_id %}
+                    <option value = {{planes.id}}> {{planes.id}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class = 'input'>
+                <label for="status">Status:</label>
+                <select name ='status' id="status" required>
+                </select></div>
+            <div class = "input"> 
+                <label for="base_price">Base Price:</label>
+                <div class="input-icon">
+                    <input required type="number" id="base_price" 
+                     placeholder="0.00" value = {{flight.base_price}} name = 'base_price'>
+                    <i>$</i>
+                </div> 
+            </div>
+        </div>
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
 </form>
+
+<script>
+    const status = {'on_time':"On Time", 'delayed':"Delayed", 'early':"Early"};
+    const dataflight = '{{ flight | tojson }}';
+    const statuslist = document.getElementById("status");
+    console.log(dataflight);
+
+    for (var key of Object.keys(status)){
+        var option = document.createElement("OPTION");
+        console.log(key);
+        console.log(status[key]);
+        option.value = key;
+        option.text = status[key];
+        if (key == dataflight["status"]){
+            option.selected = true;
+        }
+        statuslist.appendChild(option);
+    }
+</script>
 {% endblock %}

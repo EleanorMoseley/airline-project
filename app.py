@@ -529,14 +529,17 @@ def edit_flight(flight_number):
     # Redirect to login page if user is not logged in
     if "user" not in session:
         return redirect(url_for("stafflogin"))
+    if session['role'] != 'staff':
+        return render_template('error.html', error="You don't have access to this page.")
 
     with connection.cursor() as cursor:
         if request.method == "POST":
             new_departure_date_time = request.form.get("departure_date_time")
             new_arrival_date_time = request.form.get("arrival_date_time")
             new_status = request.form.get("status")
+            new_price = request.form.get("base_price")
 
-            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time,new_status, flight_number))
+            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s, base_price = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number))
 
             # Commit the transaction
             connection.commit()
@@ -544,13 +547,26 @@ def edit_flight(flight_number):
             return redirect(url_for("staff_flights"))
 
         # For GET requests, fetch the flight and render the form
-        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s" , [flight_number])
         flight = cursor.fetchone()
 
+        cursor.execute("SELECT * FROM AirlineStaff Where Username = '%s'" % session['user'])
+        staff = cursor.fetchone()
         if flight is None:
             return render_template("error.html", message="No such flight.")
+        
+        cursor.execute("SELECT * FROM airplane WHERE airline_name = '%s'" % staff["airline_name"] )
+        planes = cursor.fetchall()
+        cursor.execute("SELECT * FROM airport")
+        airports = cursor.fetchall()
+ 
+        flight['departure_date_time'] = (flight['departure_date_time'].__str__()).replace(' ', 'T')
+        flight['arrival_date_time'] = (flight['arrival_date_time'].__str__()).replace(' ', 'T')
 
-        return render_template("edit_flight.html", flight=flight)
+        print (flight)
+
+
+        return render_template("edit_flight.html", flight=flight, planes=planes, airports=airports)
 
 
 ## ADD FLIGHTS
@@ -604,7 +620,7 @@ def add_flight():
         planes = cursor.fetchall()
         cursor.execute("SELECT * FROM airport")
         airports = cursor.fetchall()
-        return render_template("add_flights.html", airplanes = planes, airports=airports)
+        return render_template("add_flights.html", planes = planes, airports=airports)
 
 ## ADD AIRPLANES
 @app.route("/add_airplane", methods=["GET", "POST"])
