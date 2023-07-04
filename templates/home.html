@@ -1,26 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<style>
+    input {
+        margin-top: 5px;
+        margin-bottom: 15px; 
+    }
+    form [type="submit"] {
+        margin-top: 10px; 
+        font-size: 15px;
+    }
+    label {
+        margin-top: 0;
+        margin-bottom: 0px; 
+    }
+    h2 {
+        margin-top: 10px; 
+        margin-bottom: 0px;
+    }
+    h1{
+        margin-bottom: 30px; 
+    }
+
+
+
+</style>
+
     <h1>Welcome to Air Ticket Reservation System</h1>
     <h2>Search for Flights</h2>
     <form action="/search" method="post">
-       
-        Source: <input type="text" id="source" placeholder = "Any" name="departure_airport"><br>
-        
-        destination: <input type="text" placeholder = "Any" id="destination" name="arrival_airport"><br>
-       
-        Date: <input type="date" id="date" name="departure_date_time"><br>
-        <input type="submit" value="Search">
+        <div class="form-group">
+            <label for = "source"> Departure From: </label>
+            <div class="input">
+                <input type="text" id="source" placeholder = "Anywhere" name="departure_airport">
+            </div>
+            <label for = "to"> Arrival To: </label>
+            <div class="input">
+                <input type="text" id="to" placeholder = "Anywhere" name="departure_airport">
+            </div>
+            <label for = "tdate"> Departure Date: </label>
+            <div class= "input">
+                <input type="date" id="tdate" name="departure_date_time"> 
+            </div>        
+            <input type="submit" value="Search">
+        </div>
     </form>
     <h2>Flight Status</h2>
     <form action="/status" method="post">
-        
-        Airline name: <input type="text" id="airline" name="airline"><br>
-      
-        Flight number: <input type="text" id="flight_number" name="flight_number"><br>
-  
-       Date:  <input type="date" id="date" name="date"><br>
-        <input type="submit" value="Check Status">
+        <div class="form-group">
+            <label for = "airline"> Airline: </label>
+            <div class = "input">
+                <input type="text" id="airline" name="airline">
+            </div>
+            <label for = "flight_number"> Flight Number: </label>
+            <div class = "input">
+                <input type="text" id="flight_number" name="flight_number">
+            </div>
+            <label for = "date"> Departure Date: </label>
+            <div class = "input">
+                <input type="date" id="date" name="date">
+            </div>
+            <div class= "input">
+                <input type="submit" value="Check Status">
+            </div>
+        </div>   
     </form>
 
 

@@ -31,7 +31,7 @@ def search():
     for key in dad:
         var = request.form.get(key)
         print(var)
-        if (len(var) < 1):
+        if (var == None or len(var)<1):
             continue
         if (key == 'departure_date_time'):
             string.append("destination_date_time >= '%s' and destination_date_time < dateadd(day, 1, '%s')" % var, var)
