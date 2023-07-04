@@ -420,6 +420,9 @@ def my_tickets():
 ##  BOOKING 
 @app.route("/book/<flight_number>", methods=["GET"])
 def book(flight_number):
+    if ("user" not in session):
+        return redirect(url_for("login"))
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
         flight = cursor.fetchone()
