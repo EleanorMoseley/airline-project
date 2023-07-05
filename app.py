@@ -562,7 +562,7 @@ def edit_flight(flight_number):
             return redirect(url_for("staff_flights"))
 
         # For GET requests, fetch the flight and render the form
-        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s" % [flight_number])
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s" % flight_number)
         flight = cursor.fetchone()
 
         cursor.execute("SELECT * FROM AirlineStaff Where Username = '%s'" % session['user'])
