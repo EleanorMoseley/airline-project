@@ -638,6 +638,7 @@ def add_flight():
         # For GET requests, render the form
         cursor.execute("SELECT * FROM airplane WHERE airline_name = '%s'" % staff["airline_name"] )
         planes = cursor.fetchall()
+        print(planes)
         cursor.execute("SELECT * FROM airport")
         airports = cursor.fetchall()
         return render_template("add_flights.html", planes = planes, airports=airports)

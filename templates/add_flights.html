@@ -71,20 +71,15 @@
                 <input required type="datetime-local" id="arrival_date_time" name="arrival_date_time"></div>
             <div class = 'input'>
                 <label for = "airplane_id"> Airplane ID:</label>
-                <select id="airplane_id" name = 'airplane_id' required>
-                    <option value = '' selected hidden disabled> -- </option>
-                    {% for planes in airplanes %}
-                    <option value = {{planes.id}}> {{planes.id}}</option>
-                    {% endfor %}
-                </select>
+                <input type="number" id="airplane_id" name = 'airplane_id' required>
             </div>
             <div class = 'input'>
                 <label for="status">Status:</label>
                 <select name ='status' id="status" required>
-                    <option value = '' selected disabled hidden > -- </option>
-                    <option value="on_time">On Time</option>
-                    <option value="delayed">Delayed</option>
-                    <option value="early">Early</option>
+                    <option value = '' selected hidden disabled> -- </option>
+                    <option value= "on_time"> On Time </option>
+                    <option value=" delayed"> Delayed </option>
+                    <option value= "early"> Early </option>
                 </select></div>
             <div class = "input"> 
                 <label for="price">Base Price:</label>
@@ -102,6 +97,5 @@
         </div>
         <input type="submit" value="Submit">
 </form>
-
 
 {% endblock %}
