@@ -554,7 +554,7 @@ def edit_flight(flight_number):
             new_status = request.form.get("status")
             new_price = request.form.get("base_price")
 
-            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s, base_price = %s WHERE flight_number = %s", (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number))
+            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s, base_price = %s WHERE flight_number = %s" % (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number))
 
             # Commit the transaction
             connection.commit()
@@ -562,7 +562,7 @@ def edit_flight(flight_number):
             return redirect(url_for("staff_flights"))
 
         # For GET requests, fetch the flight and render the form
-        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s" , [flight_number])
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s" % [flight_number])
         flight = cursor.fetchone()
 
         cursor.execute("SELECT * FROM AirlineStaff Where Username = '%s'" % session['user'])
