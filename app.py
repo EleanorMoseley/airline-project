@@ -656,9 +656,11 @@ def add_airplane():
         airplane_id = request.form.get("airplane_id")
         airline_name = staff['airline_name']
         seats = request.form.get("seats")
+        age = request.form.get("age")
+        man = request.form.get("Manufacturer")
         
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO Airplane (id, airline_name, num_seats) VALUES (%s, %s, %s)", (airplane_id, airline_name, seats))
+            cursor.execute("INSERT INTO Airplane (id, airline_name, num_seats, manufacturer, age) VALUES (%s, '%s', %s, '%s', %s)" % (airplane_id, airline_name, seats, man, age))
             connection.commit()
 
         return redirect(url_for("staffhome"))
@@ -675,9 +677,11 @@ def add_airport():
     if request.method == 'POST':
         airport_name = request.form.get("airport_name")
         airport_city = request.form.get("airport_city")
+        country = request.form.get("country")
+        type = request.form.get("type")
         
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO Airport (name, city) VALUES (%s, %s)", (airport_name, airport_city))
+            cursor.execute("INSERT INTO Airport (name, city, country, airport_type) VALUES ('%s', '%s', '%s', '%s')" % (airport_name, airport_city, country, type))
             connection.commit()
 
         return redirect(url_for("staffhome"))

@@ -3,9 +3,14 @@
 <h1>Add Airplane</h1>
 <form method="POST">
     <label for="airplane_id">Airplane ID:</label><br>
-    <input type="text" id="airplane_id" name="airplane_id"><br>
+    <input required type="number" id="airplane_id" name="airplane_id"><br>
     <label for="seats">Seats:</label><br>
-    <input type="number" id="seats" name="seats"><br>
+    <input required type="number" id="seats" name="seats"><br>
+    <label for="age">Age:</label><br>
+    <input required type="number" id="age" name="age"><br>
+    <label for="Manufacturer">Manufacturer:</label><br>
+    <input required type="text" id="Manufacturer" name="Manufacturer"><br>
     <input type="submit" value="Add Airplane">
+
 </form>
 {% endblock %}
