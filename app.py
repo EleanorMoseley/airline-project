@@ -550,11 +550,16 @@ def edit_flight(flight_number):
     with connection.cursor() as cursor:
         if request.method == "POST":
             new_departure_date_time = request.form.get("departure_date_time")
+            new_departure_date_time = (str(new_departure_date_time).__str__()).replace('T', ' ')
             new_arrival_date_time = request.form.get("arrival_date_time")
-            new_status = request.form.get("status")
-            new_price = request.form.get("base_price")
+            new_arrival_date_time = (str(new_arrival_date_time).__str__()).replace('T', ' ')
 
-            cursor.execute("UPDATE Flight SET departure_date_time = %s, arrival_date_time = %s, status = %s, base_price = %s WHERE flight_number = %s" % (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number))
+            new_status = request.form.get("status")
+            new_price = str(request.form.get("base_price"))
+            
+            print("UPDATE Flight SET departure_date_time = '%s', arrival_date_time = '%s', status = '%s', base_price = %s WHERE flight_number = %s" % (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number)
+)
+            cursor.execute("UPDATE Flight SET departure_date_time = '%s', arrival_date_time = '%s', status = '%s', base_price = %s WHERE flight_number = %s" % (new_departure_date_time, new_arrival_date_time,new_status, new_price, flight_number))
 
             # Commit the transaction
             connection.commit()
@@ -614,21 +619,19 @@ def add_flight():
                     continue
                 elif (key == 'airplane' or 'status' or 'departure_airport' or 'arrival_airport'):
                     flightdict[key] = "'" + val + "'"
-                elif (key == 'base_price'):
-                    flightdict[key] = "%.2f" % val
+                # elif (key == 'base_price'):
+                #     flightdict[key] = "%.2f" % val
                 else:
                     flightdict[key] = val
             print (flightdict)
 
-            cursor.execute("select * from flights where departure_date_time = %s and airline_name = %s and flight_number = %s " % flightdict['departure_date_time'], staff['airline_name'], flightdict['flight_number'])
+            cursor.execute("select * from flight where departure_date_time = %s and airline_name = '%s' and flight_number = %s" % (flightdict['departure_date_time'], staff['airline_name'], flightdict['flight_number']))
             match = cursor.fetchall()
             if (match):
                 return render_template("add_flights.html", error = "Already Registered")
 
-            print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
-                           (staff['airline_name'], ', '.join(flightdict.values())))
-            cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % 
-                           (staff['airline_name'], ', '.join(flightdict.values())))
+            print ("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % (staff['airline_name'], (', '.join(flightdict.values()))))
+            cursor.execute("INSERT INTO Flight (airline_name, flight_number, departure_date_time, arrival_date_time, departure_airport, arrival_airport, status, airplane_id, base_price) VALUES ('%s', %s)" % (staff['airline_name'], (', '.join(flightdict.values()))))
 
             # Commit the transaction
             connection.commit()

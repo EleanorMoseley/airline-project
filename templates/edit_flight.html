@@ -76,13 +76,7 @@
                 <input required type="datetime-local" id="arrival_date_time" value ={{flight.arrival_date_time}} name="arrival_date_time"></div>
             <div class = 'input'>
                 <label for = "airplane_id"> Airplane ID:</label>
-                <select id="airplane_id" name = 'airplane_id' required>
-                    <option value = {{flight.airplane_id}} > {{flight.airplane_id}} </option>
-                    {% for planes in airplanes %}
-                    {% if planes != flight.airplane_id %}
-                    <option value = {{planes.id}}> {{planes.id}}</option>
-                    {% endif %}
-                    {% endfor %}
+                <input id="airplane_id" name = 'airplane_id' required value = {{flight.id}}>
                 </select>
             </div>
             <div class = 'input'>
