@@ -76,7 +76,7 @@
                 <input required type="datetime-local" id="arrival_date_time" value ={{flight.arrival_date_time}} name="arrival_date_time"></div>
             <div class = 'input'>
                 <label for = "airplane_id"> Airplane ID:</label>
-                <input id="airplane_id" name = 'airplane_id' required value = {{flight.id}}>
+                <input id="airplane_id" name = 'airplane_id' required value = {{flight.airplane_id}}>
                 </select>
             </div>
             <div class = 'input'>
@@ -99,8 +99,11 @@
 <script>
     const status = {'on_time':"On Time", 'delayed':"Delayed", 'early':"Early"};
     const dataflight = '{{ flight | tojson }}';
+    dataflight = JsonConvert.SerializeObject(dataflight, Formatting.None)
     const statuslist = document.getElementById("status");
     console.log(dataflight);
+    console.log(dataflight.status)
+    
 
     for (var key of Object.keys(status)){
         var option = document.createElement("OPTION");
@@ -108,7 +111,7 @@
         console.log(status[key]);
         option.value = key;
         option.text = status[key];
-        if (key == dataflight["status"]){
+        if (key == dataflight['status']){
             option.selected = true;
         }
         statuslist.appendChild(option);

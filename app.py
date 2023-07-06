@@ -34,15 +34,18 @@ def search():
         if (var == None or len(var)<1):
             continue
         if (key == 'departure_date_time'):
-            string.append("destination_date_time >= '%s' and destination_date_time < dateadd(day, 1, '%s')" % var, var)
+            print("DATE(departure_date_time) >= '%s' and DATE(departure_date_time) < ('%s' + INTERVAL 1 DAY)" % (var, var))
+            string.append("DATE(departure_date_time) >= '%s' and DATE(departure_date_time) < ('%s' + INTERVAL 1 DAY)" % (var, var))
         else:
-            string.append('%s = %s' % key, var)
+            print (key, var)
+            string.append('%s = "%s"' % (key, var))
 
         
 
     queryString = "SELECT * FROM Flight" 
     if (len(string)>0):
-        queryString += " WHERE " + " ,".join(string)
+        queryString += " WHERE " + " and ".join(string)
+    print (queryString)
 
 
     with connection.cursor() as cursor:
