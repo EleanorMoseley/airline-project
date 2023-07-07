@@ -71,7 +71,9 @@
                 <input required type="datetime-local" id="arrival_date_time" name="arrival_date_time"></div>
             <div class = 'input'>
                 <label for = "airplane_id"> Airplane ID:</label>
-                <input type="number" id="airplane_id" name = 'airplane_id' required>
+                <select id="airplane_id" name = 'airplane_id' required>
+                    <option value = '' selected hidden disabled> -- </option>
+                </select>
             </div>
             <div class = 'input'>
                 <label for="status">Status:</label>
@@ -97,5 +99,23 @@
         </div>
         <input type="submit" value="Submit">
 </form>
+
+<script>
+     var planes = '{{planes | tojson}}'; 
+    planes = JSON.parse(planes);
+    const ob = document.getElementById("airplane_id");
+    console.log(planes);
+    console.log(typeof(planes));
+
+    for (var plane of Object.values(planes)){
+        console.log(plane);
+        var option = document.createElement("OPTION");
+        option.value = plane['id']
+        console.log(option.value);
+        option.text = plane['id'];
+        console.log(option.text);
+        ob.appendChild(option);
+    }
+</script>
 
 {% endblock %}
