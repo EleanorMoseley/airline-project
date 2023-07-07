@@ -5,11 +5,11 @@
     {% if flight %}
         <h2>Airline: {{ flight.airline_name }}</h2>
         <h2>Flight Number: {{ flight.flight_number }}</h2>
-        <h2>Source: {{ flight.source }}</h2>
-        <h2>Destination: {{ flight.destination }}</h2>
+        <h2>Source: {{ flight.departure_airport }}</h2>
+        <h2>Destination: {{ flight.arrival_airport }}</h2>
         <h2>Departure Date and Time: {{ flight.departure_date_time }}</h2>
         <h2>Arrival Date and Time: {{ flight.arrival_date_time }}</h2>
-        <h2>Status: {{ flight.status }}</h2>
+        <h2>Status: {{ flight.flight_status }}</h2>
     {% else %}
         <p>No flight found with the provided details. Please check the details and try again.</p>
     {% endif %}
