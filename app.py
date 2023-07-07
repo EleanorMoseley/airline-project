@@ -413,7 +413,9 @@ def my_tickets():
     email = user["email"]
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Ticket WHERE customer_email = %s", [email])
+        query = ("SELECT * FROM (Ticket natural left join Flight) WHERE customer_email = '%s'" % email)
+        print(query)
+        cursor.execute(query)
         tickets = cursor.fetchall()
 
     return render_template("my_tickets.html", tickets=tickets)

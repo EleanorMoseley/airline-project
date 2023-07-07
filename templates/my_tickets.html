@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 <h1>My Tickets</h1>
 {% if error %}
@@ -8,15 +7,65 @@
     </div>
     {% endif %}
 
+<style>
+    table {
+        width : 100%;
+        text-align: left;
+        align-content: left;
+        
+    }
+
+    .card-group {
+        margin: 0;
+        padding: 0; 
+    }
+    .card {
+        padding: 5px; 
+    }
+
+    .card-group:nth-child(even) {
+            background-color: rgb(240, 240, 240);
+        }
+
+    h2 {
+        text-align: left;
+    }
+    h3 {
+        text-align: left;
+    }
+</style>
 {% for ticket in tickets %}
-    <div style="border: 1px solid #000; padding: 10px; margin-bottom: 10px;">
-        <h2>Ticket ID: {{ ticket.id }}</h2>
-        <p>Flight Number: {{ ticket.flight_number }}</p>
-        <p>Airline: {{ ticket.airline_name }}</p>
-        <p>Departure Time: {{ ticket.departure_date_time }}</p>
-        <a href="{{ url_for('cancel_booking', ticket_id=ticket.id) }}">Cancel</a>
+<div class="card-group">
+    <div class="card">
+        <table>
+            <tr>
+                <td>
+                    <h2> Airline: {{ticket.airline_name}} </h2>
+                    <h3> Flight Number: {{ticket.flight_number}}</h3>
+                    <h3> Ticket ID: {{ticket.id}}</h3>
+        
+                </td>
+                <td>
+                    <p> DEPARTURE </p>
+                    <h2> {{ticket.departure_airport}} </h2>
+                    <p> {{ticket. departure_date_time}} </p>
+                </td>
+                <td>
+                    <p> ARRIVAL </p>
+                    <h2> {{ticket.arrival_airport}} </h2>
+                    <p> {{ticket.arrival_date_time}} </p>
+                </td>
+            </tr>
+            <tr> 
+                <td>
+                    <a href="{{ url_for('cancel_booking', ticket_id=ticket.id) }}">Cancel</a>
+                </td>
+            </tr>
+        </table>
     </div>
+</div>
 {% else %}
     <p>No tickets found</p>
 {% endfor %}
+
 {% endblock %}
