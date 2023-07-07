@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jul 07, 2023 at 12:36 PM
--- Server version: 5.7.39
--- PHP Version: 7.4.33
+-- Host: 127.0.0.1
+-- Generation Time: Jul 07, 2023 at 04:01 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,35 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `AirlineStaff`
+-- Table structure for table `airlinestaff`
 --
 
-CREATE TABLE `AirlineStaff` (
+CREATE TABLE `airlinestaff` (
   `username` varchar(100) NOT NULL,
   `password` varchar(100) DEFAULT NULL,
   `first_name` varchar(100) DEFAULT NULL,
   `last_name` varchar(100) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `airline_name` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `AirlineStaff`
+-- Dumping data for table `airlinestaff`
 --
 
-INSERT INTO `AirlineStaff` (`username`, `password`, `first_name`, `last_name`, `date_of_birth`, `airline_name`) VALUES
+INSERT INTO `airlinestaff` (`username`, `password`, `first_name`, `last_name`, `date_of_birth`, `airline_name`) VALUES
 ('admin', 'e2fc714c4727ee9395f324cd2e7f331f', 'Roe', 'Jones', '1978-05-25', 'United'),
-('staff1', 'e2fc714c4727ee9395f324cd2e7f331f', 'Tingting', 'Min', NULL, 'United'),
-('student', '81dc9bdb52d04dc20036dbd8313ed055', 'Tingting', 'Min', NULL, 'United');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `AirlineStaff`
+-- Indexes for table `airlinestaff`
 --
-ALTER TABLE `AirlineStaff`
+ALTER TABLE `airlinestaff`
   ADD PRIMARY KEY (`username`);
 COMMIT;
 

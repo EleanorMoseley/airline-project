@@ -8,9 +8,9 @@ app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
 
 connection = pymysql.connect(host='localhost',
-                             port = 8889, 
+                          
                              user='root',
-                             password='root',
+                             password='',
                              db='airline',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
@@ -117,7 +117,7 @@ def register():
                     'password' : '',
                     'first_name' : '',
                     'last_name': '',
-                    'date_of_birth': '',
+                    'date_of_birth_staff': '',
                     'airline_name': ''
                 }
 
@@ -128,13 +128,12 @@ def register():
                         continue
                     if (key == 'password'):
                         staff[key] = password 
-                    if (key != 'date_of_birth'):
+                    if (key != 'date_of_birth_staff'):
                         staff[key] = "'" + staff[key] + "'"
                
                 print ("INSERT INTO AirlineStaff (username, password, first_name, last_name, date_of_birth, airline_name) VALUES (%s)" %(', '.join(staff.values())))
                 
                 phone_numbers = request.form.getlist("phone_number_staff[]")
-                
                 if (len(set(phone_numbers)) != len(phone_numbers)):
                     return render_template('register.html', error = "Please submit each phone number only once")
     
@@ -144,6 +143,12 @@ def register():
                     print("INSERT INTO StaffPhone (username, phone_number) VALUES (%s, \'%s\')"% (staff['username'], phone_number))
                     cursor.execute(
                         "INSERT INTO StaffPhone (username, phone_number) VALUES (%s, \'%s\')"% (staff['username'], phone_number))
+
+                # Insert email
+                email = request.form.get("email")
+                print("INSERT INTO StaffEmail (username, email) VALUES (%s, \'%s\')"% (staff['username'], email))
+                cursor.execute("INSERT INTO StaffEmail (username, email) VALUES (%s, \'%s\')"% (staff['username'], email))
+
             connection.commit()
             cursor.close()
         return redirect(url_for("home"))
