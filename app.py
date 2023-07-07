@@ -425,11 +425,24 @@ def my_tickets():
 def book(flight_number):
     if ("user" not in session):
         return redirect(url_for("login"))
-
+    price = 0
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", [flight_number])
         flight = cursor.fetchone()
-    return render_template("book.html", flight=flight)
+        cursor.execute("SELECT * FROM PURCHASE WHERE ticket_id IN (SELECT ticket_id FROM TICKET WHERE departure_date_time = '%s' and airline_name = '%s' and flight_number = %s)" % (flight['departure_date_time'], flight['airline_name'], flight['flight_number']))
+        purchases = cursor.fetchall()
+        purchases = len(purchases)
+        print("Purchases: ", purchases)
+        cursor.execute("SELECT * FROM AIRPLANE WHERE id = %s and airline_name = '%s'" % (flight['airplane_id'], flight['airline_name']))
+        plane = cursor.fetchone()
+        capacity = plane['num_seats']
+    if (capacity==purchases):
+        return render_template('my_tickets.html', error = "Flight Fully Booked!")
+    if( purchases/capacity >= .6):
+        price = round((float(flight['base_price'])*1.20), 2)
+    else:
+        price = flight['base_price']
+    return render_template("book.html", cost = price, flight=flight)
 
 
 
@@ -443,7 +456,9 @@ def confirm_booking(flight_number):
     # Get the payment information
     card_number = request.form.get("card_number")
     expiry_date = request.form.get("expiry_date")
-    cvv = request.form.get("cvv")
+    name = request.form.get("name")
+    type = request.form.get('type')
+    cost = request.form.get('cost')
 
     # Assume that the flight's base price is the sold price
     # Get the logged-in user's email
@@ -451,12 +466,11 @@ def confirm_booking(flight_number):
     email = user["email"]
     
     # Get the current date and time as the purchase date and time
-    from datetime import datetime
     purchase_date_time = datetime.now()
 
     with connection.cursor() as cursor:
         # Get the airline_name and departure_date_time for the given flight_number
-        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", (flight_number,))
+        cursor.execute("SELECT * FROM Flight WHERE flight_number = %s", (flight_number))
         flight = cursor.fetchone()
 
         if flight is None:
@@ -468,17 +482,23 @@ def confirm_booking(flight_number):
         ticket_id = max_id + 1 if max_id is not None else 1
         print(flight)
         # Add the new booking to the Ticket table
-        cursor.execute("INSERT INTO Ticket (id, customer_email, airline_name, flight_number, departure_date_time, sold_price, payment_info_card_type, payment_info_card_number, payment_info_name_on_card, payment_info_expiration_date, purchase_date_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                       (ticket_id, email, flight["airline_name"], flight_number, flight["departure_date_time"], flight["base_price"], 'Credit', card_number, user["name"], expiry_date, purchase_date_time))
+        print ("INSERT INTO Ticket (id, customer_email, airline_name, flight_number, departure_date_time, sold_price, payment_info_card_type, payment_info_card_number, payment_info_name_on_card, payment_info_expiration_date, purchase_date_time) VALUES (%s, '%s', '%s', '%s', '%s', %s, '%s', '%s', '%s', '%s', '%s')"%
+                       (ticket_id, email, flight["airline_name"], flight_number, flight["departure_date_time"], cost, type, card_number, name, expiry_date, purchase_date_time.isoformat(' ', 'seconds')))
+    
+        cursor.execute("INSERT INTO Ticket (id, customer_email, airline_name, flight_number, departure_date_time, sold_price, payment_info_card_type, payment_info_card_number, payment_info_name_on_card, payment_info_expiration_date, purchase_date_time) VALUES (%s, '%s', '%s', '%s', '%s',' %s', '%s', '%s', '%s', '%s', '%s')"%
+                       (ticket_id, email, flight["airline_name"], flight_number, flight["departure_date_time"], cost, type, card_number, name, expiry_date, purchase_date_time.isoformat(' ', 'seconds')))
 
+
+        purchasequery = ("INSERT INTO Purchase (ticket_id, customer_email, sold_price, purchase_date, purchase_time, card_type, card_number, expiration_date, name_on_card) VALUES (%s, '%s', %s,' %s', '%s', '%s', '%s', '%s', '%s')"%
+                       (ticket_id, email, flight["base_price"], purchase_date_time.date().isoformat(), purchase_date_time.time().isoformat('seconds'), type, card_number, expiry_date, name))
         # Add the payment details to the Purchase table
-        cursor.execute("INSERT INTO Purchase (ticket_id, customer_email, sold_price, purchase_date, purchase_time, card_type, card_number, expiration_date, name_on_card) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                       (ticket_id, email, flight["base_price"], purchase_date_time.date(), purchase_date_time.time(), 'Credit', card_number, expiry_date, user["name"]))
+        print(purchasequery)
+        cursor.execute(purchasequery)
         
         # Commit the transaction
         connection.commit()
 
-    return redirect(url_for("home"))
+    return redirect(url_for("my_tickets"))
 
 
 

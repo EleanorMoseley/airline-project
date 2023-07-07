@@ -3,21 +3,171 @@
 {% block content %}
     <h1>Book Flight</h1>
 
-    <p>Airline: {{ flight.airline_name }}</p>
-    <p>Flight Number: {{ flight.flight_number }}</p>
-    <p>Departure Time: {{ flight.departure_time }}</p>
-    <p>Arrival Time: {{ flight.arrival_time }}</p>
+    <style>
+        .container {
+            padding: 10px;
+        }
+        .cardtable {
+            vertical-align: top;
+            width: fit-content;
+        }
+        .card {
+            align-self: left; 
+            border-style: solid;
+            border-color: #005977;
+            border-radius: .6em;
+            margin: 0 auto;
+            box-shadow: 8px 8px 20px -10px gray;
+            width: fit-content;
+        }
+        .card .card-body {
+            background-color: white;
+            overflow: hidden;
+            padding: 10px; 
+            border-bottom-left-radius: .5em;
+            border-bottom-right-radius: .5em;
+            margin: 0 auto; 
+            width: fit-content;
+        }
+        .card .card-header {
+            background-color: #005977;
+            color: white;
+            border-top-left-radius: .5em;
+            border-top-right-radius: .5em;
+            width: auto; 
+        }
+    
+        h3 {
+            font-weight: normal;
+            text-transform: uppercase;
+            text-align: left;
+            margin-top: auto;
+            margin-bottom: auto;
+            padding: 10px;
+        }
+    
+        .small {
+            font-size: 12px;
+            margin: 1px;
+            margin-bottom: 10px; 
+        }
+        .med {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 20px;
+            margin: 1px;
+            margin-bottom: 15px;
+        }
+        .smallprint {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            margin: 1px;
+            margin-bottom: 10px; 
+        }
+        .info {
+            column-width: 200px;
+        }
+        .arr {
+            padding-left: 15px;
+        }
+        td {
+            vertical-align: text-top;
+            text-align: top;
+        }
+        .cardinfo {
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .cardinfo tbody {
+            width: fit-content;
+        }
+        .cardinfo tr {
+            width: fit-content;
+        }
+        .cardinfo td {
+            width: fit-content; 
+        }
+        .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .input-field {
+        width: 200px;
+    }
+    </style>
+    
+    <div class="card" >
+        <h3 class="card-header">Flight Summary</h3>
+        <div class="card-body">
+        <table class="cardtable">
+            <tr>
+                <td class = "info">
+                    <p class = "small"> AIRLINE </p>
+                    <p class = "med"> {{flight.airline_name}}</p>
+                    <p class = "small"> FLIGHT NUMBER </p>
+                    <p class = "med"> {{flight.flight_number}}</p>
+                </td>
+                <td class = "dep">
+                    <p class = "small"> DEPARTURE </p>
+                    <p class = "med"> {{flight.departure_airport}}</p>
+                    <p class = "smallprint"> {{flight.departure_date_time}}</p>
+                </td>
+                <td class = "arr">
+                    <p class = "small"> ARRIVAL </p>
+                    <p class = "med"> {{flight.arrival_airport}}</p>
+                    <p class = "smallprint"> {{flight.arrival_date_time}}</p>
+                </td>
+            </tr>  
+
+        </table>
+            
+        </div>
+    </div>
 
     <form method="post" action="{{ url_for('confirm_booking', flight_number=flight.flight_number) }}">
-        <label for="card_number">Card Number:</label>
-        <input type="text" id="card_number" name="card_number" required><br>
-
-        <label for="expiry_date">Expiry Date (YYYY-MM-DD):</label>
-        <input type="text" id="expiry_date" name="expiry_date" required><br>
-
-        <label for="cvv">CVV:</label>
-        <input type="text" id="cvv" name="cvv" required><br>
-
+        <div class="form-group">
+            <label for="name">Name On Card:</label>
+            <input type="text" id="name" name="name" class="input-field" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="type">Type:</label>
+            <input type="radio" id="credit" name="type" value = "credit" required>
+            <label for="credit">Credit</label>
+    
+            <input type="radio" id="debit" value = "debit" name="type">
+            <label for="debit">Debit</label>
+        </div>
+    
+        <div class="form-group">
+            <label for="card_number">Card Number:</label>
+            <input type="number" id="card_number" name="card_number" class="input-field" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="expiry_date">Expiry Date:</label>
+            <input type="date" id="expiry_date" name="expiry_date" class="input-field" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="number" id="cvv" name="cvv" class="input-field" required>
+        </div>
+    
+        <div class="form-group">
+            <label>Price:</label>
+            <input type name = "cost" text = "${{cost}}"" value = {{cost}} readonly>
+        </div>
+    
         <input type="submit" value="Confirm Booking">
     </form>
+    
+    
+    
 {% endblock %}
