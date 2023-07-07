@@ -76,13 +76,12 @@
                 <input required type="datetime-local" id="arrival_date_time" value ={{flight.arrival_date_time}} name="arrival_date_time"></div>
             <div class = 'input'>
                 <label for = "airplane_id"> Airplane ID:</label>
-                <input id="airplane_id" name = 'airplane_id' required value = {{flight.airplane_id}}>
-                </select>
+                <select id="airplane_id" name = 'airplane_id' required> </select>
             </div>
             <div class = 'input'>
                 <label for="status">Status:</label>
-                <select name ='status' id="status" required>
-                </select></div>
+                <select name ='status' id="status" required></select>
+            </div>
             <div class = "input"> 
                 <label for="base_price">Base Price:</label>
                 <div class="input-icon">
@@ -98,10 +97,11 @@
 
 <script>
     const status = {'on_time':"On Time", 'delayed':"Delayed", 'early':"Early"};
-    const dataflight = '{{ flight | tojson }}';
-    dataflight = JsonConvert.SerializeObject(dataflight, Formatting.None)
+    var dataflight = '{{ flight | tojson }}';
+    dataflight = JSON.parse(dataflight);
     const statuslist = document.getElementById("status");
     console.log(dataflight);
+    console.log(typeof(dataflight));
     console.log(dataflight.status)
     
 
@@ -115,6 +115,25 @@
             option.selected = true;
         }
         statuslist.appendChild(option);
+    }
+
+    var planes = '{{planes | tojson}}'; 
+    planes = JSON.parse(planes);
+    const ob = document.getElementById("airplane_id");
+    console.log(planes);
+    console.log(typeof(planes));
+
+    for (var plane of Object.values(planes)){
+        console.log(plane);
+        var option = document.createElement("OPTION");
+        option.value = plane['id']
+        console.log(option.value);
+        option.text = plane['id'];
+        console.log(option.text);
+        if (plane['id'] == dataflight['airplane_id']){
+            option.selected = true;
+        }
+        ob.appendChild(option);
     }
 </script>
 {% endblock %}
